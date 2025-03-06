@@ -285,7 +285,6 @@ def main():
         else:
             tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimituspaiva)
             st.success(f"Kiitos, {nimi}! Tilauksesi on vastaanotettu.")
-            st.experimental_rerun()
 
     if st.checkbox("Näytä kaikki tilaukset"):
         conn = sqlite3.connect('tilaukset.db')
@@ -309,7 +308,6 @@ def main():
             if salasana == "salasana":
                 nollaa_varasto()
                 st.success("Varasto on nollattu alkuperäisiin määriin!")
-                # st.experimental_rerun()
             else:
                 st.error("Väärä salasana!")
 
