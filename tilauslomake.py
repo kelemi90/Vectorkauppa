@@ -113,10 +113,10 @@ alkuperaiset_maarat = {
 # Tuotekokonaisuudet (ei sisällä piilotettuja tuotteita)
 tuotekokonaisuudet = {
     "Pöydät ja tuolit": [
-        "Valkoiset muovipöydät", "Ikeapöydät", "Vaneripöydät-vaneripoydat-B-pöytä",
-        "Vaneripöydät-vaneripoydat-C-pöytä", "Vaneripöydät-vaneripoydat-D-pöytä",
-        "Vaneripöydät-vaneripoydat-E-pöytä", "Vaneripöydät-vaneripoydat-G-pöytä",
-        "Vaneripöydät-vaneripoydat-H-pöytä", "Vaneripöydät-vaneripoydat-F-pöytä-info",
+        "Valkoiset muovipöydät", "Ikeapöydät", "Vaneripöydät B",
+        "Vaneripöydät C", "Vaneripöydät D",
+        "Vaneripöydät E", "Vaneripöydät G",
+        "Vaneripöydät H", "Vaneripöydät F-info",
         "Tuoli", "Sohva"
     ],
     "Koneet ja toimistotarvikkeet": [
@@ -135,7 +135,7 @@ tuotekokonaisuudet = {
         "Verkkokaapeli"
     ],
     "Standipaketit ja loossit": [
-        "Standi-paketti-Custom, ota yhteys yhteistyo@vectorama.fi", "Ständialueen matotus per neliömetri",
+        "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi", "Ständialueen matotus per neliömetri",
         "Standipaketti 4x4m", "Loossi", "Standipaketti 6x4m", "Standipaketti 6x8m",
         "Custom standi paketti"
     ],
