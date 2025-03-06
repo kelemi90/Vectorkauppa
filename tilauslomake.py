@@ -7,13 +7,13 @@ alkuperaiset_maarat = {
     # Pöydät ja tuolit
     "Valkoiset muovipöydät": 250,
     "Ikeapöydät": 28,
-    "Vaneripöydät-vaneripoydat-B-pöytä": 57,
-    "Vaneripöydät-vaneripoydat-C-pöytä": 78,
-    "Vaneripöydät-vaneripoydat-D-pöytä": 18,
-    "Vaneripöydät-vaneripoydat-E-pöytä": 100,
-    "Vaneripöydät-vaneripoydat-G-pöytä": 158,
-    "Vaneripöydät-vaneripoydat-H-pöytä": 16,
-    "Vaneripöydät-vaneripoydat-F-pöytä-info": 3,
+    "Vaneripöydät B": 57,
+    "Vaneripöydät C": 78,
+    "Vaneripöydät D": 18,
+    "Vaneripöydät E": 100,
+    "Vaneripöydät G": 158,
+    "Vaneripöydät H": 16,
+    "Vaneripöydät F-info": 3,
     "Tuoli": 267,
     "Sohva": 4,
     # Koneet ja toimistotarvikkeet
@@ -41,13 +41,13 @@ alkuperaiset_maarat = {
     "Sähköt 1x16A 230V 3000W": 21,
     "Sähköt 3x16A 400V 9000W": 20,
     "Sähköt 3x32A 400V 15000W": 20,
-    "Sähköt-vecto-Sähköt-Muu": 10,
+    "Sähköt Muu": 10,
     "verkko-1G Base-T": 1000,
     "verkko-10G SR": 1000,
     "verkko-10G LR": 1000,
     "Verkkokaapeli": 1000,
     # Standipaketit ja loossit
-    "Standi-paketti-Custom, ota yhteys yhteistyo@vectorama.fi": 4,
+    "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi": 4,
     "Ständialueen matotus per neliömetri": 10000,
     "Standipaketti 4x4m": 10,
     "Loossi": 10,
@@ -234,7 +234,7 @@ def main():
     with st.form(key='tilauslomake'):
         nimi = st.text_input("Nimi")
         toimituspiste = st.text_input("Toimituspiste")
-        toimituspaiva = st.date_input("Toimituspäivä", min_value=datetime.today())
+        toimituspaiva = st.date_input("Toimituspäivä", min_value=datetime(2025, 6, 1))
 
         st.subheader("Valitse tuotteet ja määrät")
         valitut_tuotteet = {}
