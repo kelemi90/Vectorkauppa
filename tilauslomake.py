@@ -309,7 +309,7 @@ def main():
             if salasana == "salasana":
                 nollaa_varasto()
                 st.success("Varasto on nollattu alkuperäisiin määriin!")
-                st.experimental_rerun()
+                # st.experimental_rerun()
             else:
                 st.error("Väärä salasana!")
 
