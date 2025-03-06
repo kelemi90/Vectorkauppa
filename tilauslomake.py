@@ -153,6 +153,7 @@ tuotekokonaisuudet = {
     ]
 }
 
+# Funktio tietokantojen alustamiseen
 def init_db():
     conn = sqlite3.connect('tilaukset.db')
     c = conn.cursor()
@@ -174,6 +175,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Funktio varaston päivittämiseen
 def paivita_varasto(valitut_tuotteet):
     conn = sqlite3.connect('varasto.db')
     c = conn.cursor()
@@ -183,6 +185,7 @@ def paivita_varasto(valitut_tuotteet):
     conn.commit()
     conn.close()
 
+# Funktio varaston nollaamiseen
 def nollaa_varasto():
     conn = sqlite3.connect('varasto.db')
     c = conn.cursor()
@@ -192,6 +195,7 @@ def nollaa_varasto():
     conn.commit()
     conn.close()
 
+# Funktio varaston hakemiseen
 def hae_varasto():
     conn = sqlite3.connect('varasto.db')
     c = conn.cursor()
@@ -200,6 +204,7 @@ def hae_varasto():
     conn.close()
     return varasto
 
+# Funktio tilauksen tallentamiseen
 def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimituspaiva):
     conn = sqlite3.connect('tilaukset.db')
     c = conn.cursor()
@@ -213,6 +218,7 @@ def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimitusp
     conn.close()
     paivita_varasto(valitut_tuotteet)
 
+# Streamlit-sovellus
 def main():
     init_db()
     varasto = hae_varasto()
@@ -237,10 +243,12 @@ def main():
 
     st.subheader("Valitse tuotteet ja määrät")
     
+    # Verkko-, Sähköt- ja Lisätuote-tunnistus
     verkko_tuotteet = ["verkko-1G Base-T", "verkko-10G SR", "verkko-10G LR"]
     sahko_tuotteet = ["Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
     lisatuote = "Lisätuote"
 
+    # Tuotekokonaisuudet expanderilla
     for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
         with st.expander(kokonaisuus, expanded=False):
             for tuote in tuotteet:
