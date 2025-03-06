@@ -153,20 +153,27 @@ tuotekokonaisuudet = {
     ]
 }
 
+# Funktio tietokantojen alustamiseen
 def init_db():
     conn = sqlite3.connect('tilaukset.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS tilaukset 
                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  nimi TEXT, tuote TEXT, maara INTEGER, lisatiedot TEXT,
-                  toimituspiste TEXT, toimituspaiva TEXT, pvm TEXT)''')
+                  nimi TEXT,
+                  tuote TEXT,
+                  maara INTEGER,
+                  lisatiedot TEXT,
+                  toimituspiste TEXT,
+                  toimituspaiva TEXT,
+                  pvm TEXT)''')
     conn.commit()
     conn.close()
 
     conn = sqlite3.connect('varasto.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS varasto 
-                 (tuote TEXT PRIMARY KEY, maara INTEGER)''')
+                 (tuote TEXT PRIMARY KEY,
+                  maara INTEGER)''')
     c.execute("SELECT COUNT(*) FROM varasto")
     if c.fetchone()[0] == 0:
         for tuote, maara in alkuperaiset_maarat.items():
@@ -174,6 +181,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Funktio varaston päivittämiseen
 def paivita_varasto(valitut_tuotteet):
     conn = sqlite3.connect('varasto.db')
     c = conn.cursor()
@@ -183,6 +191,7 @@ def paivita_varasto(valitut_tuotteet):
     conn.commit()
     conn.close()
 
+# Funktio varaston nollaamiseen
 def nollaa_varasto():
     conn = sqlite3.connect('varasto.db')
     c = conn.cursor()
@@ -192,6 +201,7 @@ def nollaa_varasto():
     conn.commit()
     conn.close()
 
+# Funktio varaston hakemiseen
 def hae_varasto():
     conn = sqlite3.connect('varasto.db')
     c = conn.cursor()
@@ -200,6 +210,7 @@ def hae_varasto():
     conn.close()
     return varasto
 
+# Funktio tilauksen tallentamiseen
 def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimituspaiva):
     conn = sqlite3.connect('tilaukset.db')
     c = conn.cursor()
@@ -213,6 +224,7 @@ def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimitusp
     conn.close()
     paivita_varasto(valitut_tuotteet)
 
+# Streamlit-sovellus
 def main():
     init_db()
     varasto = hae_varasto()
@@ -221,85 +233,86 @@ def main():
         st.session_state.valitut_tuotteet = {tuote: 0 for tuote in alkuperaiset_maarat.keys()}
     if 'lisatiedot' not in st.session_state:
         st.session_state.lisatiedot = {}
-    if 'nimi' not in st.session_state:
-        st.session_state.nimi = ""
-    if 'toimituspiste' not in st.session_state:
-        st.session_state.toimituspiste = ""
-    if 'toimituspaiva' not in st.session_state:
-        st.session_state.toimituspaiva = datetime(2025, 6, 1)
 
     st.title("Tilauslomake")
 
-    # Syöttökentät ilman st.formia
-    st.session_state.nimi = st.text_input("Nimi", value=st.session_state.nimi)
-    st.session_state.toimituspiste = st.text_input("Toimituspiste", value=st.session_state.toimituspiste)
-    st.session_state.toimituspaiva = st.date_input("Toimituspäivä", value=st.session_state.toimituspaiva, min_value=datetime(2025, 6, 1))
+    with st.form(key='tilauslomake'):
+        nimi = st.text_input("Nimi")
+        toimituspiste = st.text_input("Toimituspiste")
+        toimituspaiva = st.date_input("Toimituspäivä", min_value=datetime(2025, 6, 1))
 
-    st.subheader("Valitse tuotteet ja määrät")
-    
-    verkko_tuotteet = ["verkko-1G Base-T", "verkko-10G SR", "verkko-10G LR"]
-    sahko_tuotteet = ["Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
-    lisatuote = "Lisätuote"
+        st.subheader("Valitse tuotteet ja määrät")
+        
+        verkko_tuotteet = ["verkko-1G Base-T", "verkko-10G SR", "verkko-10G LR"]
+        sahko_tuotteet = ["Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
+        lisatuote = "Lisätuote"
 
-    for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
-        with st.expander(kokonaisuus, expanded=False):
-            for tuote in tuotteet:
-                if tuote not in alkuperaiset_maarat:
-                    st.warning(f"Tuotetta '{tuote}' ei löydy varastosta. Tarkista nimi!")
-                    continue
-                
-                saatavilla = varasto.get(tuote, 0)
-                unique_key = f"{kokonaisuus}_{tuote}_maara"
-                maara = st.number_input(
-                    f"{tuote} (Saatavilla: {saatavilla})",
-                    min_value=0, max_value=saatavilla,
-                    value=st.session_state.valitut_tuotteet.get(tuote, 0),
-                    key=unique_key
-                )
-                st.session_state.valitut_tuotteet[tuote] = maara
-                
-                # Näytä lisätietokenttä heti, kun määrä > 0
-                if maara > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
-                    lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
-                    lisatieto = st.text_input(
-                        f"Lisätiedot: {tuote}",
-                        value=st.session_state.lisatiedot.get(tuote, ""),
-                        key=lisatieto_key
+        for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
+            with st.expander(kokonaisuus, expanded=False):
+                for tuote in tuotteet:
+                    if tuote not in alkuperaiset_maarat:
+                        st.warning(f"Tuotetta '{tuote}' ei löydy varastosta. Tarkista nimi!")
+                        continue
+                    
+                    saatavilla = varasto.get(tuote, 0)
+                    # Yksilöllinen avain: yhdistelmä kategoriasta ja tuotenimestä
+                    unique_key = f"{kokonaisuus}_{tuote}_maara"
+                    maara = st.number_input(
+                        f"{tuote} (Saatavilla: {saatavilla})",
+                        min_value=0, max_value=saatavilla,
+                        value=st.session_state.valitut_tuotteet.get(tuote, 0),
+                        key=unique_key
                     )
-                    st.session_state.lisatiedot[tuote] = lisatieto
+                    st.session_state.valitut_tuotteet[tuote] = maara
+                    
+                    if maara > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
+                        # Yksilöllinen avain lisätiedoille
+                        lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
+                        lisatieto = st.text_input(
+                            f"Lisätiedot: {tuote}",
+                            value=st.session_state.lisatiedot.get(tuote, ""),
+                            key=lisatieto_key
+                        )
+                        st.session_state.lisatiedot[tuote] = lisatieto
 
-    # Erillinen lähetysnappi
-    if st.button("Lähetä tilaus"):
-        if not st.session_state.nimi.strip():
+        submit_button = st.form_submit_button(label="Lähetä tilaus")
+
+    if submit_button:
+        if not nimi.strip():
             st.error("Syötä nimi!")
-        elif not st.session_state.toimituspiste.strip():
+        elif not toimituspiste.strip():
             st.error("Syötä toimituspiste!")
         elif sum(st.session_state.valitut_tuotteet.values()) == 0:
             st.error("Valitse ainakin yksi tuote!")
         else:
-            tallenna_tilaus(
-                st.session_state.nimi,
-                st.session_state.valitut_tuotteet,
-                st.session_state.lisatiedot,
-                st.session_state.toimituspiste,
-                st.session_state.toimituspaiva
-            )
-            st.success(f"Kiitos, {st.session_state.nimi}! Tilauksesi on vastaanotettu.")
-            # Nollaa lomake
+            tallenna_tilaus(nimi, st.session_state.valitut_tuotteet, st.session_state.lisatiedot, toimituspiste, toimituspaiva)
+            st.success(f"Kiitos, {nimi}! Tilauksesi on vastaanotettu.")
             st.session_state.valitut_tuotteet = {tuote: 0 for tuote in alkuperaiset_maarat.keys()}
             st.session_state.lisatiedot = {}
-            st.session_state.nimi = ""
-            st.session_state.toimituspiste = ""
-            st.session_state.toimituspaiva = datetime(2025, 6, 1)
 
-    # Varaston palautusmahdollisuus
+    if st.checkbox("Näytä kaikki tilaukset"):
+        conn = sqlite3.connect('tilaukset.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM tilaukset")
+        tilaukset = c.fetchall()
+        conn.close()
+        
+        if tilaukset:
+            st.write("### Kaikki tilaukset")
+            for tilaus in tilaukset:
+                lisatieto = f", Lisätiedot: {tilaus[4]}" if tilaus[4] else ""
+                st.write(f"ID: {tilaus[0]}, Nimi: {tilaus[1]}, Tuote: {tilaus[2]}, Määrä: {tilaus[3]}{lisatieto}, "
+                         f"Toimituspiste: {tilaus[5]}, Toimituspäivä: {tilaus[6]}, Päivämäärä: {tilaus[7]}")
+        else:
+            st.write("Ei tilauksia vielä.")
+
     if st.checkbox("Palauta varasto"):
         salasana = st.text_input("Syötä salasana varaston nollaamiseksi", type="password")
         if st.button("Nollaa varasto"):
-            if salasana == "salasana":  # Vaihda halutessasi turvallisempi salasana
+            if salasana == "salasana":
                 nollaa_varasto()
                 st.success("Varasto on nollattu alkuperäisiin määriin!")
-                st.rerun()  # Päivittää sivun automaattisesti
+                st.rerun()
             else:
                 st.error("Väärä salasana!")
 
