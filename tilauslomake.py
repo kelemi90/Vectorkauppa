@@ -152,6 +152,7 @@ tuotekokonaisuudet = {
         "Lisätuote", "Taittojalka"
     ]
 }
+
 # Funktio tietokantojen alustamiseen
 def init_db():
     conn = sqlite3.connect('tilaukset.db')
@@ -229,7 +230,7 @@ def main():
     st.title("Tilauslomake")
 
     with st.form(key='tilauslomake'):
-        nimi = st.text_input("Nimi")
+        nimi = st.text_input("Tilaajan nimi")
 
         st.subheader("Valitse tuotteet ja määrät")
         valitut_tuotteet = {}
@@ -247,22 +248,26 @@ def main():
                 puolivali = len(tuotteet) // 2
 
                 with col1:
-                    for tuote in tuotteet[:puolivali]:
+                    for i, tuote in enumerate(tuotteet[:puolivali]):
                         saatavilla = varasto.get(tuote, 0)
                         maara = st.number_input(f"{tuote} (Saatavilla: {saatavilla})", 
-                                                min_value=0, max_value=saatavilla, value=0, key=tuote)
+                                                min_value=0, max_value=saatavilla, value=0, 
+                                                key=f"{tuote}_{i}_col1")
                         valitut_tuotteet[tuote] = maara
                         if maara > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
-                            lisatiedot[tuote] = st.text_input(f"Lisätiedot: {tuote}", key=f"lisatieto_{tuote}")
+                            lisatiedot[tuote] = st.text_input(f"Lisätiedot: {tuote}", 
+                                                              key=f"lisatieto_{tuote}_{i}_col1")
 
                 with col2:
-                    for tuote in tuotteet[puolivali:]:
+                    for i, tuote in enumerate(tuotteet[puolivali:]):
                         saatavilla = varasto.get(tuote, 0)
                         maara = st.number_input(f"{tuote} (Saatavilla: {saatavilla})", 
-                                                min_value=0, max_value=saatavilla, value=0, key=tuote)
+                                                min_value=0, max_value=saatavilla, value=0, 
+                                                key=f"{tuote}_{i}_col2")
                         valitut_tuotteet[tuote] = maara
                         if maara > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
-                            lisatiedot[tuote] = st.text_input(f"Lisätiedot: {tuote}", key=f"lisatieto_{tuote}")
+                            lisatiedot[tuote] = st.text_input(f"Lisätiedot: {tuote}", 
+                                                              key=f"lisatieto_{tuote}_{i}_col2")
 
         submit_button = st.form_submit_button(label="Lähetä tilaus")
 
@@ -276,12 +281,12 @@ def main():
             st.success(f"Kiitos, {nimi}! Tilauksesi on vastaanotettu.")
             st.experimental_rerun()
 
-    if st.checkbox("Näytä kaikki tilaukset"):
-        conn = sqlite3.connect('tilaukset.db')
-        c = conn.cursor()
-        c.execute("SELECT * FROM tilaukset")
-        tilaukset = c.fetchall()
-        conn.close()
+    # if st.checkbox("Näytä kaikki tilaukset"):
+    #     conn = sqlite3.connect('tilaukset.db')
+    #     c = conn.cursor()
+    #     c.execute("SELECT * FROM tilaukset")
+    #     tilaukset = c.fetchall()
+    #     conn.close()
         
         if tilaukset:
             st.write("### Kaikki tilaukset")
