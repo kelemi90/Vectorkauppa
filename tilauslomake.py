@@ -163,6 +163,8 @@ def init_db():
                   tuote TEXT,
                   maara INTEGER,
                   lisatiedot TEXT,
+                  toimituspiste TEXT,
+                  toimituspaiva TEXT,
                   pvm TEXT)''')
     conn.commit()
     conn.close()
@@ -209,15 +211,15 @@ def hae_varasto():
     return varasto
 
 # Funktio tilauksen tallentamiseen
-def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot):
+def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimituspaiva):
     conn = sqlite3.connect('tilaukset.db')
     c = conn.cursor()
     pvm = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     for tuote, maara in valitut_tuotteet.items():
         if maara > 0:
             lisatieto = lisatiedot.get(tuote, "")
-            c.execute("INSERT INTO tilaukset (nimi, tuote, maara, lisatiedot, pvm) VALUES (?, ?, ?, ?, ?)",
-                      (nimi, tuote, maara, lisatieto, pvm))
+            c.execute("INSERT INTO tilaukset (nimi, tuote, maara, lisatiedot, toimituspiste, toimituspaiva, pvm) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                      (nimi, tuote, maara, lisatieto, toimituspiste, toimituspaiva.strftime("%Y-%m-%d"), pvm))
     conn.commit()
     conn.close()
     paivita_varasto(valitut_tuotteet)
@@ -230,7 +232,9 @@ def main():
     st.title("Tilauslomake")
 
     with st.form(key='tilauslomake'):
-        nimi = st.text_input("Tilaajan nimi")
+        nimi = st.text_input("Nimi")
+        toimituspiste = st.text_input("Toimituspiste")
+        toimituspaiva = st.date_input("Toimituspäivä", min_value=datetime.today())
 
         st.subheader("Valitse tuotteet ja määrät")
         valitut_tuotteet = {}
@@ -274,25 +278,28 @@ def main():
     if submit_button:
         if nimi.strip() == "":
             st.error("Syötä nimi!")
+        elif toimituspiste.strip() == "":
+            st.error("Syötä toimituspiste!")
         elif sum(valitut_tuotteet.values()) == 0:
             st.error("Valitse ainakin yksi tuote!")
         else:
-            tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot)
+            tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimituspaiva)
             st.success(f"Kiitos, {nimi}! Tilauksesi on vastaanotettu.")
             st.experimental_rerun()
 
-    # if st.checkbox("Näytä kaikki tilaukset"):
-    #     conn = sqlite3.connect('tilaukset.db')
-    #     c = conn.cursor()
-    #     c.execute("SELECT * FROM tilaukset")
-    #     tilaukset = c.fetchall()
-    #     conn.close()
+    if st.checkbox("Näytä kaikki tilaukset"):
+        conn = sqlite3.connect('tilaukset.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM tilaukset")
+        tilaukset = c.fetchall()
+        conn.close()
         
         if tilaukset:
             st.write("### Kaikki tilaukset")
             for tilaus in tilaukset:
                 lisatieto = f", Lisätiedot: {tilaus[4]}" if tilaus[4] else ""
-                st.write(f"ID: {tilaus[0]}, Nimi: {tilaus[1]}, Tuote: {tilaus[2]}, Määrä: {tilaus[3]}{lisatieto}, Päivämäärä: {tilaus[5]}")
+                st.write(f"ID: {tilaus[0]}, Nimi: {tilaus[1]}, Tuote: {tilaus[2]}, Määrä: {tilaus[3]}{lisatieto}, "
+                         f"Toimituspiste: {tilaus[5]}, Toimituspäivä: {tilaus[6]}, Päivämäärä: {tilaus[7]}")
         else:
             st.write("Ei tilauksia vielä.")
 
