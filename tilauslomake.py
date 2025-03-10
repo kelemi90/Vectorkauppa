@@ -250,31 +250,40 @@ def main():
 
     # Tuotekokonaisuudet expanderilla
     for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
-        with st.expander(kokonaisuus, expanded=False):
-            for tuote in tuotteet:
-                if tuote not in alkuperaiset_maarat:
-                    st.warning(f"Tuotetta '{tuote}' ei löydy varastosta. Tarkista nimi!")
-                    continue
-                
-                saatavilla = varasto.get(tuote, 0)
-                unique_key = f"{kokonaisuus}_{tuote}_maara"
-                maara = st.number_input(
-                    f"{tuote} (Saatavilla: {saatavilla})",
-                    min_value=0, max_value=saatavilla,
-                    value=st.session_state.valitut_tuotteet.get(tuote, 0),
-                    key=unique_key
-                )
-                st.session_state.valitut_tuotteet[tuote] = maara
-                
-                # Näytä lisätietokenttä heti, kun määrä > 0
-                if maara > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
-                    lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
-                    lisatieto = st.text_input(
-                        f"Lisätiedot: {tuote}",
-                        value=st.session_state.lisatiedot.get(tuote, ""),
-                        key=lisatieto_key
+            with st.expander(kokonaisuus, expanded=False):
+                for tuote in tuotteet:
+                    if tuote not in alkuperaiset_maarat:
+                        st.warning(f"Tuotetta '{tuote}' ei löydy varastosta. Tarkista nimi!")
+                        continue
+                    
+                    saatavilla = varasto.get(tuote, 0)
+                    unique_key = f"{kokonaisuus}_{tuote}_maara"
+                    
+                    # Käytä st.number_input callback-funktiolla viiveen poistamiseksi
+                    def update_maara(tuote=tuote, unique_key=unique_key):
+                        st.session_state.valitut_tuotteet[tuote] = st.session_state[unique_key]
+
+                    maara = st.number_input(
+                        f"{tuote} (Saatavilla: {saatavilla})",
+                        min_value=0, max_value=saatavilla,
+                        value=st.session_state.valitut_tuotteet.get(tuote, 0),
+                        key=unique_key,
+                        on_change=update_maara
                     )
-                    st.session_state.lisatiedot[tuote] = lisatieto
+
+                    # Näytä lisätietokenttä vain, jos määrä > 0
+                    if st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
+                        lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
+                        
+                        def update_lisatieto(tuote=tuote, lisatieto_key=lisatieto_key):
+                            st.session_state.lisatiedot[tuote] = st.session_state[lisatieto_key]
+
+                        st.text_input(
+                            f"Lisätiedot: {tuote}",
+                            value=st.session_state.lisatiedot.get(tuote, ""),
+                            key=lisatieto_key,
+                            on_change=update_lisatieto
+                        )
 
     # Erillinen lähetysnappi
     if st.button("Lähetä tilaus"):
