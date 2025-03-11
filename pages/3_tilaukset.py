@@ -148,7 +148,7 @@ def main():
     if 'valitut_kategoriat' in locals():
         st.session_state['valitut_kategoriat'] = valitut_kategoriat
     else:
-        valitut_kategoriat = st.session_state.get('valitut_kategoriat', kategoriat)
+        valitut_kategoriat = st.session_state.get('valitut_kategoriat', [])
 
     # Suodata ja näytä tilaukset
     if valitut_kategoriat:
