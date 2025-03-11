@@ -10,6 +10,7 @@
 
    ```
    $ streamlit run tilauslomake.py
+   ¤ streamlit run tilaukset.py
    ```
 
 # Verkkokaupan tarkoitus
