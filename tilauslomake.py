@@ -313,7 +313,7 @@ def main():
     if st.checkbox("Palauta varasto"):
         salasana = st.text_input("Syötä salasana varaston nollaamiseksi", type="password")
         if st.button("Nollaa varasto"):
-            if salasana == "salasana":  # Vaihda halutessasi turvallisempi salasana
+            if salasana == "CcdablYgUIcMfZ30gLMB":  # Vaihda halutessasi turvallisempi salasana
                 nollaa_varasto()
                 st.success("Varasto on nollattu alkuperäisiin määriin!")
                 st.rerun()  # Päivittää sivun automaattisesti
