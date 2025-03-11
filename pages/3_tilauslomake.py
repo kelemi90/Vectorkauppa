@@ -137,8 +137,8 @@ tuotekokonaisuudet = {
     ],
     "Standipaketit ja loossit": [
         "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi", "Ständialueen matotus per neliömetri",
-        "Standipaketti 4x4m", "Loossi", "Standipaketti 6x4m", "Standipaketti 6x8m",
-        "Custom standi paketti"
+        "Standipaketti 4x4m", "Standipaketti 6x4m", "Standipaketti 6x8m",
+        "Custom standi paketti", "Loossi"
     ],
     "Valot": [
         "Spottivalot", "Valaistus"
