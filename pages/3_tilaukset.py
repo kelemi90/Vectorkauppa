@@ -22,12 +22,6 @@ tuotekokonaisuudet = {
     "Muut": ["Lisätuote", "Taittojalka"]
 }
 
-# Tietokannan polku
-DB_PATH = "Vectorkauppa_app/gitrepo/tilaukset.db"
-# st.write(f"DB_PATH: {DB_PATH}")
-# st.write(f"File exists: {os.path.exists(DB_PATH)}")
-
-
 # Funktio tietokannan hakemiseen
 def hae_tilaukset():
     conn = sqlite3.connect(DB_PATH)
