@@ -1,6 +1,8 @@
 import streamlit as st
 import sqlite3
 from datetime import datetime
+import os
+
 
 # Alkuperäiset määrät (sisältää myös piilotetut tuotteet varastosaldoa varten)
 alkuperaiset_maarat = {
@@ -152,6 +154,8 @@ tuotekokonaisuudet = {
         "Lisätuote", "Taittojalka"
     ]
 }
+# Tietokannan polku
+# DB_PATH = "/workspaces/Vectorkauppa/gitrepo/tilaukset.db"
 
 # Funktio tietokantojen alustamiseen
 def init_db():

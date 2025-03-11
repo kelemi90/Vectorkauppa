@@ -7,6 +7,8 @@ from reportlab.lib.pagesizes import A4, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
+import os
+
 
 # Tuotekokonaisuudet
 tuotekokonaisuudet = {
@@ -20,9 +22,15 @@ tuotekokonaisuudet = {
     "Muut": ["Lisätuote", "Taittojalka"]
 }
 
+# Tietokannan polku
+DB_PATH = "/workspaces/Vectorkauppa/gitrepo/tilaukset.db"
+# st.write(f"DB_PATH: {DB_PATH}")
+# st.write(f"File exists: {os.path.exists(DB_PATH)}")
+
+
 # Funktio tietokannan hakemiseen
 def hae_tilaukset():
-    conn = sqlite3.connect('tilaukset.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT * FROM tilaukset")
     tilaukset = c.fetchall()
