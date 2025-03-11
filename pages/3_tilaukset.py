@@ -23,7 +23,7 @@ tuotekokonaisuudet = {
 }
 
 # Tietokannan polku
-DB_PATH = "/workspaces/Vectorkauppa/gitrepo/tilaukset.db"
+DB_PATH = "Vectorkauppa_app/gitrepo/tilaukset.db"
 # st.write(f"DB_PATH: {DB_PATH}")
 # st.write(f"File exists: {os.path.exists(DB_PATH)}")
 
