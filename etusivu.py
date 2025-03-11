@@ -5,10 +5,17 @@ st.set_page_config(
     page_icon="",
 )
 
-st.title("Vector infrashop appi")
-st.write("Tämä on Vectorama infrashopin uusi järjestelmä")
+st.title("Vector infrashop kauppa")
 
-st.sidebar.success("Valitse sivu")
+st.markdown(
+    """
+    Tältä sivustolta löydät kaikki tilattavat tuotteet, kuten esim. pöydät, 
+    tuolit, TV:t, yms.
 
-# st.markdown()
+    Kun lisäätte useita kappaleita samasta tuotteesta valikkoon, niin tarkastakaa
+    että valikkoon on tullut oikea määrä kyseisiä tuotteita. Tällä hetkellä sivusto
+    päivittää jokaisen valinnan pienellä viiveellä, joten nopeasti klikkaamalla 
+    sivu saattaa valita vain ensimmäisen lisäyksen, jättäen loput huomioimatta.
+    """
+)
 

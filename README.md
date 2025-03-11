@@ -9,8 +9,7 @@
 2. Run the app
 
    ```
-   $ streamlit run tilauslomake.py
-   ¤ streamlit run tilaukset.py
+   ¤ streamlit run etusivu.py
    ```
 
 # Verkkokaupan tarkoitus
