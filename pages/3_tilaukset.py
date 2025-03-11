@@ -112,57 +112,51 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
     else:
         st.write("Ei tilauksia vielä.")
 
-# Build-näkymä: Kaikki tilaukset
-def build_page():
-    st.title("Build - Kaikki tilaukset")
-    toimipiste = st.text_input("Syötä toimipiste (jätä tyhjäksi nähdäksesi kaikki)")
-    
-    tilaukset = hae_tilaukset()
-    if toimipiste:
-        tilaukset = [t for t in tilaukset if t[5] == toimipiste]
-    
-    nayta_tilaukset_taulukkona(tilaukset, "Kaikki tilaukset")
+# Päänäkymä filttereillä
+def main():
+    st.set_page_config(page_title="Tilausten katselu", initial_sidebar_state="collapsed")
+    st.title("Tilausten katselu")
 
-# Deco-näkymä: Standipaketit ja loossit, Valot, Muut
-def deco_page():
-    st.title("Deco - Tilaukset")
-    toimipiste = st.text_input("Syötä toimipiste (jätä tyhjäksi nähdäksesi kaikki)")
-    
-    kategoriat = ["Standipaketit ja loossit", "Valot", "Muut"]
-    tilaukset = suodata_tilaukset(kategoriat, toimipiste)
-    
-    nayta_tilaukset_taulukkona(tilaukset, "Deco-tilaukset")
+    # Toimipisteen syöttökenttä
+    toimipiste = st.text_input("Syötä toimipiste (jätä tyhjäksi nähdäksesi kaikki)", "")
 
-# Infra-näkymä: TV, Koneet ja toimistotarvikkeet, Sähkö ja verkko, Valot, Muut
-def infra_page():
-    st.title("Infra - Tilaukset")
-    toimipiste = st.text_input("Syötä toimipiste (jätä tyhjäksi nähdäksesi kaikki)")
-    
-    kategoriat = ["TV", "Sähkö ja verkko", "Valot", "Muut"]
-    tilaukset = suodata_tilaukset(kategoriat, toimipiste)
-    
-    nayta_tilaukset_taulukkona(tilaukset, "Infra-tilaukset")
+    # Monivalinta tuotekategorioille
+    kategoriat = list(tuotekokonaisuudet.keys())
+    valitut_kategoriat = st.multiselect(
+        "Valitse tuotekategoriat",
+        options=kategoriat,
+        default=kategoriat  # Oletuksena kaikki valittu
+    )
 
-# Game-näkymä: Koneet ja toimistotarvikkeet, Pöydät ja tuolit, Sähkö ja verkko, Valot, Muut
-def game_page():
-    st.title("Game - Tilaukset")
-    toimipiste = st.text_input("Syötä toimipiste (jätä tyhjäksi nähdäksesi kaikki)")
-    
-    kategoriat = ["Koneet ja toimistotarvikkeet", "Pöydät ja tuolit", "Sähkö ja verkko", "Valot", "Muut"]
-    tilaukset = suodata_tilaukset(kategoriat, toimipiste)
-    
-    nayta_tilaukset_taulukkona(tilaukset, "Game-tilaukset")
+    # Esivalmiit filtterivaihtoehdot (Build, Deco, Infra, Game)
+    st.write("### Esivalmiit suodattimet")
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        if st.button("Build (Kaikki)"):
+            valitut_kategoriat = kategoriat
+    with col2:
+        if st.button("Deco"):
+            valitut_kategoriat = ["Standipaketit ja loossit", "Valot", "Muut"]
+    with col3:
+        if st.button("Infra"):
+            valitut_kategoriat = ["TV", "Sähkö ja verkko", "Valot", "Muut"]
+    with col4:
+        if st.button("Game"):
+            valitut_kategoriat = ["Koneet ja toimistotarvikkeet", "Pöydät ja tuolit", "Sähkö ja verkko", "Valot", "Muut"]
 
-# Määritellään sivut listana
-st.set_page_config(page_title="Tilausten katselu", initial_sidebar_state="collapsed")
+    # Päivitä multiselect valinnat esivalmiiden suodattimien perusteella
+    if 'valitut_kategoriat' in locals():
+        st.session_state['valitut_kategoriat'] = valitut_kategoriat
+    else:
+        valitut_kategoriat = st.session_state.get('valitut_kategoriat', kategoriat)
 
-pages = [
-    st.Page(build_page, title="Build", url_path="build"),
-    st.Page(deco_page, title="Deco", url_path="deco"),
-    st.Page(infra_page, title="Infra", url_path="infra"),
-    st.Page(game_page, title="Game", url_path="game")
-]
+    # Suodata ja näytä tilaukset
+    if valitut_kategoriat:
+        tilaukset = suodata_tilaukset(valitut_kategoriat, toimipiste if toimipiste else None)
+        otsikko = f"Tilaukset - {', '.join(valitut_kategoriat)}" if valitut_kategoriat else "Kaikki tilaukset"
+        nayta_tilaukset_taulukkona(tilaukset, otsikko)
+    else:
+        st.write("Valitse ainakin yksi kategoria nähdäksesi tilaukset.")
 
-# Suoritetaan navigointi
-page = st.navigation(pages)
-page.run()
+if __name__ == "__main__":
+    main()
