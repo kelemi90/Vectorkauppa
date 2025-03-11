@@ -218,6 +218,12 @@ def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimitusp
     conn.close()
     paivita_varasto(valitut_tuotteet)
 
+# Git-komennot suoraan
+    os.chdir("/Vectorkauppa_app/gitrepo")
+    os.system("git add tilaukset.db")
+    os.system(f'git commit -m "Uusi tilaus: {nimi} - {tuote} x{maara}"')
+    os.system("git push origin main")
+
 # Streamlit-sovellus
 def main():
     init_db()
