@@ -9,7 +9,6 @@ from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 import os
 
-
 # Tuotekokonaisuudet
 tuotekokonaisuudet = {
     "Pöydät ja tuolit": ["Valkoiset muovipöydät", "Ikeapöydät", "Vaneripöydät B", "Vaneripöydät C", "Vaneripöydät D", "Vaneripöydät E", "Vaneripöydät G", "Vaneripöydät H", "Vaneripöydät F-info", "Tuoli", "Sohva"],
@@ -24,7 +23,7 @@ tuotekokonaisuudet = {
 
 # Funktio tietokannan hakemiseen
 def hae_tilaukset():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect('tilaukset.db')
     c = conn.cursor()
     c.execute("SELECT * FROM tilaukset")
     tilaukset = c.fetchall()
