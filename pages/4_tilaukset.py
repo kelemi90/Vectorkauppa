@@ -131,23 +131,26 @@ def main():
 
     # Esivalmiit filtterivaihtoehdot (Build, Deco, Infra, Game)
     st.write("### Esivalmiit suodattimet")
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
     with col1:
-        if st.button("Build (Kaikki)"):
-            valitut_kategoriat = ["Pöydät ja tuolit", "Muut"]
+        if st.button("Kaikki"):
+            valitut_kategoriat = valitut_kategoriat
     with col2:
+        if st.button("Build"):
+            valitut_kategoriat = ["Pöydät ja tuolit", "Muut"]
+    with col3:
         if st.button("Deco"):
             valitut_kategoriat = ["Standipaketit ja loossit", "Valot", "Muut"]
-    with col3:
+    with col4:
         if st.button("Infra"):
             valitut_kategoriat = ["TV", "Sähkö ja verkko", "Valot", "Muut"]
-    with col4:
+    with col5:
         if st.button("Game"):
             valitut_kategoriat = ["Koneet ja toimistotarvikkeet", "Pöydät ja tuolit", "Valot", "Muut"]
-    with col5:
+    with col6:
         if st.button("Sähkö"):
             valitut_kategoriat = ["Sähkö ja verkko"]
-    with col6:
+    with col7:
         if st.button("Verkko"):
             valitut_kategoriat = ["Sähkö ja verkko"]
 
