@@ -123,7 +123,7 @@ tuotekokonaisuudet = {
         "Tehokone", "Pelikone", "Yleisnäyttö", "Pelinäyttö",
         "Medialäppäri", "PROVO Matto - Hiirimatto", "PROVO KUMU PRO - 7.1 tilaäänipelikuuloke",
         "PROVO NOSTE PRO - hiiri", "PROVO KAJO OPTO - Näppäimistö", "Esperanza EG102",
-        "Toimisto näppäimistö", "Toimistohiiri", "Taittojalka"
+        "Toimisto näppäimistö", "Toimistohiiri"
     ],
     "TV": [
         "info-tv", "Kuluttaja-tv", "TV virtakaapeli ja hdmi kaapeli", "Tv lattiajalat",
@@ -146,7 +146,6 @@ tuotekokonaisuudet = {
         "Lasiovinen jääkaappi", "Lasi-ikkunallinen arkkupakastin", "Pullonkeräys tynnyrit",
         "Arkkupakastin", "Jenkkikaappi", "Jääkaappipakastin", "Kiertoilmauuni",
         "Kylmälaari", "Metallinen jääkaappi/pakastin", "Mikro", "Induktioliesi",
-        "Lisätuote"
     ],
     "Muut": [
         "Lisätuote", "Taittojalka"
@@ -246,6 +245,7 @@ def main():
     # Verkko-, Sähköt- ja Lisätuote-tunnistus
     verkko_tuotteet = ["verkko-1G Base-T", "verkko-10G SR", "verkko-10G LR"]
     sahko_tuotteet = ["Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
+    deco_tuotteet = ["Valot"]
     lisatuote = "Lisätuote"
 
     # Tuotekokonaisuudet expanderilla
@@ -272,7 +272,7 @@ def main():
                     )
 
                     # Näytä lisätietokenttä vain, jos määrä > 0
-                    if st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
+                    if st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote or tuote in deco_tuotteet):
                         lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
                         
                         def update_lisatieto(tuote=tuote, lisatieto_key=lisatieto_key):
