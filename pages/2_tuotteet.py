@@ -83,13 +83,3 @@ st.markdown(
     Taittojalka | |
 """
 )
-
-    
-
-standipaketit = {
-    "Peruspaketti": ["Info-TV", "Matto", "Pöytä"],
-    "Premium-paketti": ["Info-TV", "Matto", "Pöytä", "Tuoli", "Valaistus"]
-}
-
-valittu_paketti = st.selectbox("Valitse standipaketti", list(standipaketit.keys()))
-st.write("Paketin sisältö:", standipaketit[valittu_paketti])
