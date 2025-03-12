@@ -54,7 +54,6 @@ alkuperaiset_maarat = {
     "Loossi": 10,
     "Standipaketti 6x4m": 10,
     "Standipaketti 6x8m": 10,
-    "Custom standi paketti": 3,
     # Valot
     "Spottivalot": 10,
     "Valaistus": 1000,
@@ -138,7 +137,7 @@ tuotekokonaisuudet = {
     "Standipaketit ja loossit": [
         "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi", "Ständialueen matotus per neliömetri",
         "Standipaketti 4x4m", "Standipaketti 6x4m", "Standipaketti 6x8m",
-        "Custom standi paketti", "Loossi"
+         "Loossi"
     ],
     "Valot": [
         "Spottivalot", "Valaistus"
