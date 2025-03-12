@@ -20,65 +20,65 @@ st.markdown(
     Koneet ja toimistotarvikkeet:
     | Nimi | Kuvaus |
     |-------|------|
-    Tehokone | Tehokkaampi pc |
-    Pelikone | Pelaamiseen tarkoitettu | 
-    Yleisnäyttö  |  |
-    Pelinäyttö |  |
-    Medialäppäri |  |
-    PROVO Matto - Hiirimatto | |
-    PROVO KUMU PRO - 7.1 tilaäänipelikuuloke | |
-    PROVO NOSTE PRO - hiiri | |
-    PROVO KAJO OPTO - Näppäimistö | |
-    Esperanza EG102 | |
-    Toimisto näppäimistö | |
-    Toimistohiiri | |
+    | Tehokone | Tehokkaampi pc |
+    | Pelikone | Pelaamiseen tarkoitettu | 
+    | Yleisnäyttö  |  |
+    | Pelinäyttö |  |
+    | Medialäppäri |  |
+    | PROVO Matto - Hiirimatto | |
+    | PROVO KUMU PRO - 7.1 tilaäänipelikuuloke | |
+    | PROVO NOSTE PRO - hiiri | |
+    | PROVO KAJO OPTO - Näppäimistö | |
+    | Esperanza EG102 | |
+    | Toimisto näppäimistö | |
+    | Toimistohiiri | |
 
     TV:
     | Nimi | Lisätiedot|
     |-------|------|
-    info-tv | 42" - 55" |
-    Kuluttaja-tv | 42" - 55" |
-    TV virtakaapeli ja hdmi kaapeli | |
-    Tv lattiajalat | |
-    TV Trussi-kiinnitys | |
-    Tv pöytäjalat | |
+    | info-tv | 42" - 55" |
+    | Kuluttaja-tv | 42" - 55" |
+    | TV virtakaapeli ja hdmi kaapeli | |
+    | Tv lattiajalat | |
+    | TV Trussi-kiinnitys | |
+    | Tv pöytäjalat | |
 
     Standipaketit ja loossit:
     Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi
 
     | Nimi | Pituus | Leveys |
     |-------|------|---------|
-    Ständialueen matotus per neliömetri | |
-    Standipaketti 4x4m | 4m | 4m |
-    Standipaketti 6x4m | 6m | 4m |
-    Standipaketti 6x8m | 6m | 8m |
-    Loossi |  | |
+    | Ständialueen matotus per neliömetri | |
+    | Standipaketti 4x4m | 4m | 4m |
+    | Standipaketti 6x4m | 6m | 4m |
+    | Standipaketti 6x8m | 6m | 8m |
+    | Loossi |  | |
 
     Valot:
     | Nimi | Lisäinfoa |
     |-------|----|
-    Spottivalot | Värilliset ja valkoinen |
-    Valaistus | Kerro minkälaista valoa haluat |
+    | Spottivalot | Värilliset ja valkoinen |
+    | Valaistus | Kerro minkälaista valoa haluat |
     
     Kodinkoneet:
     | Nimi |
     |-------|
-    Lasiovinen jääkaappi |
-    Lasi-ikkunallinen arkkupakastin |
-    Pullonkeräys tynnyri |
-    Arkkupakastin |
-    Jenkkikaappi |
-    Jääkaappipakastin |
-    Kiertoilmauun |
-    Kylmälaari |
-    Metallinen jääkaappi/pakastin |
-    Mikro |
-    Induktioliesi |
+    | Lasiovinen jääkaappi |
+    | Lasi-ikkunallinen arkkupakastin |
+    | Pullonkeräys tynnyri |
+    | Arkkupakastin |
+    | Jenkkikaappi |
+    | Jääkaappipakastin |
+    | Kiertoilmauun |
+    | Kylmälaari |
+    | Metallinen jääkaappi/pakastin |
+    | Mikro |
+    | Induktioliesi |
     
     Muut: 
     | Nimi | Lisäinfo |
     |-------|------|
-    Lisätuote | Kerro mitä tarvitset |
-    Taittojalka | |
+    | Lisätuote | Kerro mitä tarvitset |
+    | Taittojalka | |
 """
 )
