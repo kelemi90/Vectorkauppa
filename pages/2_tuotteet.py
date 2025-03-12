@@ -3,70 +3,84 @@ import streamlit as st
 st.markdown(
     """
     Pöydät ja tuolit: 
-        Valkoiset muovipöydät
-        Ikeapöydät
-        Vaneripöydät B
-        Vaneripöydät C
-        Vaneripöydät D
-        Vaneripöydät E
-        Vaneripöydät G
-        Vaneripöydät H
-        Vaneripöydät F-info
-        Tuoli 
-        Sohva
+    | Nimi | Pituus | Leveys | Korkeus | Lisätieto |
+    |-------|------|---------|------|----|
+    |Valkoiset muovipöydät | | | | |
+    |Ikeapöydät | | | | Tilaa tarvittaessa |
+    |Vaneripöydät B | | | | |
+    |Vaneripöydät C | | | | |
+    |Vaneripöydät D | | | | |
+    |Vaneripöydät E | | | | |
+    |Vaneripöydät G | | | | |
+    |Vaneripöydät H | | | | |
+    |Vaneripöydät F-info | | | | Infolle varattu |
+    |Tuoli | | | | |
+    |Sohva | | | | |
     
     Koneet ja toimistotarvikkeet:
-        Jimms tehokone
-        Jimms pelikone 
-        jimms yleisnäyttö 
-        Jimms pelinäyttö
-        Medialäppäri
-        PROVO Matto - Hiirimatto
-        PROVO KUMU PRO - 7.1 tilaäänipelikuuloke
-        PROVO NOSTE PRO - hiiri
-        PROVO KAJO OPTO - Näppäimistö
-        Esperanza EG102
-        Toimisto näppäimistö
-        Toimistohiiri
+    | Nimi | Kuvaus |
+    |-------|------|
+    Tehokone | |
+    Pelikone | | 
+    Yleisnäyttö  | |
+    Pelinäyttö | |
+    Medialäppäri | |
+    PROVO Matto - Hiirimatto | |
+    PROVO KUMU PRO - 7.1 tilaäänipelikuuloke | |
+    PROVO NOSTE PRO - hiiri | |
+    PROVO KAJO OPTO - Näppäimistö | |
+    Esperanza EG102 | |
+    Toimisto näppäimistö | |
+    Toimistohiiri | |
 
     TV:
-        info-tv
-        Kuluttaja-tv
-        TV virtakaapeli ja hdmi kaapeli
-        Tv lattiajalat
-        TV Trussi-kiinnitys
-        Tv pöytäjalat
-    
+    | Nimi | Pituus | Leveys | Korkeus |
+    |-------|------|---------|------|
+    info-tv | |
+    Kuluttaja-tv | |
+    TV virtakaapeli ja hdmi kaapeli | |
+    Tv lattiajalat | |
+    TV Trussi-kiinnitys | |
+    Tv pöytäjalat | |
+
     Standipaketit ja loossit:
-        Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi
-        Ständialueen matotus per neliömetri
-        Standipaketti 4x4m
-        Standipaketti 6x4m
-        Standipaketti 6x8m
-        Custom standi paketti
-        Looss
-    
+    | Nimi | Pituus | Leveys | Korkeus |
+    |-------|------|---------|------|
+    Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi
+    Ständialueen matotus per neliömetri | |
+    Standipaketti 4x4m | |
+    Standipaketti 6x4m | |
+    Standipaketti 6x8m | |
+    Custom standi paketti | |
+    Looss | |
+
     Valot:
-        Spottivalot
-        Valaistus
+    | Nimi | Pituus | Leveys | Korkeus |
+    |-------|------|---------|------|
+    Spottivalot | |
+    Valaistus | |
     
     Kodinkoneet:
-        Lasiovinen jääkaappi
-        Lasi-ikkunallinen arkkupakastin
-        Pullonkeräys tynnyri
-        Arkkupakastin
-        Jenkkikaappi
-        Jääkaappipakastin
-        Kiertoilmauun
-        Kylmälaari
-        Metallinen jääkaappi/pakastin
-        Mikro
-        Induktioliesi
-        Lisätuote
+    | Nimi | Pituus | Leveys | Korkeus |
+    |-------|------|---------|------|
+    Lasiovinen jääkaappi | |
+    Lasi-ikkunallinen arkkupakastin | |
+    Pullonkeräys tynnyri | |
+    Arkkupakastin | |
+    Jenkkikaappi | |
+    Jääkaappipakastin | |
+    Kiertoilmauun | |
+    Kylmälaari | |
+    Metallinen jääkaappi/pakastin | |
+    Mikro | |
+    Induktioliesi | |
+    Lisätuote | |
     
     Muut: 
-        Lisätuote
-        Taittojalka
+    | Nimi | Pituus | Leveys | Korkeus |
+    |-------|------|---------|------|
+    Lisätuote | |
+    Taittojalka | |
 """
 )
 

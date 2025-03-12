@@ -18,10 +18,10 @@ alkuperaiset_maarat = {
     "Tuoli": 267,
     "Sohva": 4,
     # Koneet ja toimistotarvikkeet
-    "Jimms tehokone": 20,
-    "Jimms pelikone": 20,
-    "jimms yleisnäyttö": 40,
-    "Jimms pelinäyttö": 40,
+    "Tehokone": 20,
+    "Pelikone": 20,
+    "Yleisnäyttö": 40,
+    "Pelinäyttö": 40,
     "Medialäppäri": 30,
     "PROVO Matto - Hiirimatto": 35,
     "PROVO KUMU PRO - 7.1 tilaäänipelikuuloke": 30,
@@ -121,7 +121,7 @@ tuotekokonaisuudet = {
         "Tuoli", "Sohva"
     ],
     "Koneet ja toimistotarvikkeet": [
-        "Jimms tehokone", "Jimms pelikone", "jimms yleisnäyttö", "Jimms pelinäyttö",
+        "Tehokone", "Pelikone", "Yleisnäyttö", "Pelinäyttö",
         "Medialäppäri", "PROVO Matto - Hiirimatto", "PROVO KUMU PRO - 7.1 tilaäänipelikuuloke",
         "PROVO NOSTE PRO - hiiri", "PROVO KAJO OPTO - Näppäimistö", "Esperanza EG102",
         "Toimisto näppäimistö", "Toimistohiiri", "Taittojalka"
