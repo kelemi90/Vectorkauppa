@@ -1,5 +1,8 @@
 .streamlit/secrets.toml
 
+# DB ignore
+*.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -26,6 +29,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+2nd_variaatio/
 MANIFEST
 
 # PyInstaller
