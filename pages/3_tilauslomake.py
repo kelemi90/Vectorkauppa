@@ -268,7 +268,7 @@ def main():
     sahko_tuotteet = ["Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
     # deco_tuotteet = ["Spottivalot", "Valaistus"]
     lisatuote = "Lisätuote"
-    custom_standi = "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi"  # Custom-standi tunnistus
+    custom_standi = "Standi paketti Custom"  # Custom-standi tunnistus
 
     # Tuotekokonaisuudet expanderilla
     for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
