@@ -6,7 +6,7 @@ st.markdown(
     | Nimi | Pituus | Leveys | Lisätieto |
     |-------|------|--------|----|
     |Valkoiset muovipöydät | 180 | 74 | |
-    |Ikeapöydät | 120 | 60 |  |
+    |Ikeapöydät | 120 | 60 | Tilattavissa tapahtuman aikana äärimmäisessä hätätapauksessa |
     |Vaneripöydät B | 250 | 60 |  |
     |Vaneripöydät C | 257 | 60 |  |
     |Vaneripöydät D | 267 | 60 |  |

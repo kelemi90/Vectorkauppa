@@ -115,7 +115,7 @@ alkuperaiset_maarat = {
 tuotekokonaisuudet = {
     "Pöydät ja tuolit": [
         "Valkoiset muovipöydät",
-        "Ikeapöydät",
+        # "Ikeapöydät",
         "Vaneripöydät B",
         "Vaneripöydät C",
         "Vaneripöydät D",
