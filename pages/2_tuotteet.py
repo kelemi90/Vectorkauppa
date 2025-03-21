@@ -6,7 +6,7 @@ st.markdown(
     | Nimi | Pituus | Leveys | Lisätieto |
     |-------|------|--------|----|
     |Valkoiset muovipöydät | 180 | 74 | |
-    |Ikeapöydät | 120 | 60 | Tilaa tarvittaessa |
+    |Ikeapöydät | 120 | 60 |  |
     |Vaneripöydät B | 250 | 60 |  |
     |Vaneripöydät C | 257 | 60 |  |
     |Vaneripöydät D | 267 | 60 |  |
@@ -29,7 +29,7 @@ st.markdown(
     | PROVO KUMU PRO - 7.1 tilaäänipelikuuloke | |
     | PROVO NOSTE PRO - hiiri | |
     | PROVO KAJO OPTO - Näppäimistö | |
-    | Esperanza EG102 | |
+    | Esperanza EG102 | Gamepad/peliohjaine |
     | Toimisto näppäimistö | |
     | Toimistohiiri | |
 
@@ -52,7 +52,6 @@ st.markdown(
     | Standipaketti 4x4m | 4m | 4m |
     | Standipaketti 6x4m | 6m | 4m |
     | Standipaketti 6x8m | 6m | 8m |
-    | Loossi |  | |
 
     | Sähkö ja verkko | Esimerkkejä |
     | ---------|------|

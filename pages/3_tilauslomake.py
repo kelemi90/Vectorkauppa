@@ -17,6 +17,7 @@ alkuperaiset_maarat = {
     "Vaneripöydät F-info": 3,
     "Tuoli": 267,
     "Sohva": 4,
+    "Säkkituoli, musta": 4,
     # Koneet ja toimistotarvikkeet
     "Tehokone": 20,
     "Pelikone": 20,
@@ -48,10 +49,9 @@ alkuperaiset_maarat = {
     "verkko-10G LR": 1000,
     "Verkkokaapeli": 1000,
     # Standipaketit ja loossit
-    "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi": 4,
+    "Standi paketti Custom": 4,
     "Ständialueen matotus per neliömetri": 10000,
     "Standipaketti 4x4m": 10,
-    "Loossi": 10,
     "Standipaketti 6x4m": 10,
     "Standipaketti 6x8m": 10,
     # Valot
@@ -86,6 +86,7 @@ alkuperaiset_maarat = {
     "360 led-360 led-yksipäinen-100": 40,
     "RGB wash pixel ohjattu": 30,
     "trussi paketti": 0,
+    "Loossi": 10,
     "Päätylaatta-päätylaatta (eurotruss)": 2,
     "Päätylaatta-päätylaatta (alutruss)": 8,
     "Päätylaatta-päätylaatta (milos)": 3,
@@ -113,11 +114,18 @@ alkuperaiset_maarat = {
 # Tuotekokonaisuudet (ei sisällä piilotettuja tuotteita)
 tuotekokonaisuudet = {
     "Pöydät ja tuolit": [
-        "Valkoiset muovipöydät", "Ikeapöydät", "Vaneripöydät B",
-        "Vaneripöydät C", "Vaneripöydät D",
-        "Vaneripöydät E", "Vaneripöydät G",
-        "Vaneripöydät H", "Vaneripöydät F-info",
-        "Tuoli", "Sohva"
+        "Valkoiset muovipöydät",
+        "Ikeapöydät",
+        "Vaneripöydät B",
+        "Vaneripöydät C",
+        "Vaneripöydät D",
+        "Vaneripöydät E",
+        "Vaneripöydät G",
+        "Vaneripöydät H",
+        "Vaneripöydät F-info",
+        "Tuoli",
+        "Sohva",
+        "Säkkituoli, musta"
     ],
     "Koneet ja toimistotarvikkeet": [
         "Tehokone", "Pelikone", "Yleisnäyttö", "Pelinäyttö",
@@ -135,9 +143,8 @@ tuotekokonaisuudet = {
         "Verkkokaapeli"
     ],
     "Standipaketit ja loossit": [
-        "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi", "Ständialueen matotus per neliömetri",
+        "Standi paketti Custom", "Ständialueen matotus per neliömetri",
         "Standipaketti 4x4m", "Standipaketti 6x4m", "Standipaketti 6x8m",
-         "Loossi"
     ],
     "Valot": [
         "Spottivalot", "Valaistus"
@@ -217,6 +224,18 @@ def tallenna_tilaus(nimi, valitut_tuotteet, lisatiedot, toimituspiste, toimitusp
     conn.close()
     paivita_varasto(valitut_tuotteet)
 
+# Funktio valittujen tuotteiden laskemiseen tuotekokonaisuuksittain
+def laske_kokonaisuuksien_maarat(valitut_tuotteet, tuotekokonaisuudet):
+    kokonaisuus_maarat = {kokonaisuus: 0 for kokonaisuus in tuotekokonaisuudet.keys()}
+    for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
+        for tuote in tuotteet:
+            # Poista mitat ja lisätiedot tuotenimestä vertailua varten
+            tuote_nimi = tuote.split(",")[0].strip()
+            for valittu_tuote, maara in valitut_tuotteet.items():
+                if valittu_tuote.startswith(tuote_nimi) and maara > 0:
+                    kokonaisuus_maarat[kokonaisuus] += maara
+    return kokonaisuus_maarat
+
 # Streamlit-sovellus
 def main():
     init_db()
@@ -232,6 +251,8 @@ def main():
         st.session_state.toimituspiste = ""
     if 'toimituspaiva' not in st.session_state:
         st.session_state.toimituspaiva = datetime(2025, 6, 1)
+    if 'custom_mitat' not in st.session_state:
+        st.session_state.custom_mitat = {"leveys": 0.0, "pituus": 0.0}
 
     st.title("Tilauslomake")
 
@@ -245,16 +266,23 @@ def main():
     # Verkko-, Sähköt- ja Lisätuote-tunnistus
     verkko_tuotteet = ["verkko-1G Base-T", "verkko-10G SR", "verkko-10G LR"]
     sahko_tuotteet = ["Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
-    deco_tuotteet = ["Valot"]
+    # deco_tuotteet = ["Spottivalot", "Valaistus"]
     lisatuote = "Lisätuote"
+    custom_standi = "Standi paketti Custom, ota yhteys yhteistyo@vectorama.fi"  # Custom-standi tunnistus
 
     # Tuotekokonaisuudet expanderilla
     for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
             with st.expander(kokonaisuus, expanded=False):
                 for tuote in tuotteet:
                     if tuote not in alkuperaiset_maarat:
-                        st.warning(f"Tuotetta '{tuote}' ei löydy varastosta. Tarkista nimi!")
-                        continue
+                        tuote_nimi = tuote.split(",")[0].strip()
+                        if tuote_nimi not in alkuperaiset_maarat:
+                            st.warning(f"Tuotetta '{tuote}' ei löydy varastosta. Tarkista nimi!")
+                            continue
+                        else:
+                            tuote_avain = tuote_nimi
+                    else:
+                        tuote_avain = tuote
                     
                     saatavilla = varasto.get(tuote, 0)
                     unique_key = f"{kokonaisuus}_{tuote}_maara"
@@ -270,9 +298,59 @@ def main():
                         key=unique_key,
                         on_change=update_maara
                     )
+                    # Näytä lisätietokentta aina "Valot"-kategoriassa
+                    if kokonaisuus == "Valot":
+                        lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
+                        
+                        def update_lisatieto(tuote=tuote, lisatiet_key=lisatieto_key):
+                            st.session_state.lisatiedot[tuote] = st.session_state[lisatieto_key]
 
+                        st.text_input(
+                            f"Lisätiedot: {tuote}",
+                            value=st.session_state.lisatiedot.get(tuote, ""),
+                            key=lisatieto_key,
+                            on_change=update_lisatieto
+                        )
+
+                    # Näytä mitat-kenttä Custom-standille, jos määrä > 0
+                    elif tuote_avain == custom_standi and st.session_state.valitut_tuotteet[tuote_avain] > 0:
+                        leveys_key = f"{kokonaisuus}_{tuote}_leveys"
+                        pituus_key = f"{kokonaisuus}_{tuote}_pituus"
+                    
+                        def update_mitat(tuote=tuote_avain, leveys_key=leveys_key, pituus_key=pituus_key):
+                            st.session_state.custom_mitat["leveys"] = st.session_state.get(leveys_key, 0.0)
+                            st.session_state.custom_mitat["pituus"] = st.session_state.get(pituus_key, 0.0)
+                            st.session_state.lisatiedot[tuote] = f"Mitat: {st.session_state.custom_mitat['leveys']}m x {st.session_state.custom_mitat['pituus']}m"
+
+                        st.number_input(
+                            "Leveys (metreinä)",
+                            min_value=0.0, step=0.1,
+                            value=float(st.session_state.custom_mitat.get("leveys", 0.0)),
+                            key=leveys_key,
+                            on_change=update_mitat,
+                            args=(tuote_avain, leveys_key, pituus_key)
+                        )
+                        st.number_input(
+                            "Pituus (metreinä)",
+                            min_value=0.0, step=0.1,
+                            value=float(st.session_state.custom_mitat.get("pituus", 0.0)),
+                            key=pituus_key,
+                            on_change=update_mitat,
+                            args=(tuote_avain, leveys_key, pituus_key)
+                        )
+                    
+                    elif st.session_state.valitut_tuotteet[tuote_avain] > 0 and (tuote_avain in verkko_tuotteet or tuote_avain in sahko_tuotteet or tuote_avain == lisatuote):
+                        lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
+                        def update_lisatieto(tuote=tuote_avain, lisatieto_key=lisatieto_key):
+                            st.session_state.lisatiedot[tuote] = st.session_state[lisatieto_key]
+                        st.text_input(
+                            f"Lisätiedot: {tuote}",
+                            value=st.session_state.lisatiedot.get(tuote_avain, ""),
+                            key=lisatieto_key,
+                            on_change=update_lisatieto
+                        )
                     # Näytä lisätietokenttä vain, jos määrä > 0
-                    if st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote or tuote in deco_tuotteet):
+                    elif st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
                         lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
                         
                         def update_lisatieto(tuote=tuote, lisatieto_key=lisatieto_key):
@@ -284,6 +362,13 @@ def main():
                             key=lisatieto_key,
                             on_change=update_lisatieto
                         )
+
+    # Näytä valittujen tuotteiden yhteenveto tuotekokonaisuuksittain
+    st.subheader("Valittujen tuotteiden yhteenveto")
+    kokonaisuus_maarat = laske_kokonaisuuksien_maarat(st.session_state.valitut_tuotteet, tuotekokonaisuudet)
+    for kokonaisuus, maara in kokonaisuus_maarat.items():
+        if maara > 0:
+            st.write(f"{kokonaisuus}: {maara} kpl")
 
     # Erillinen lähetysnappi
     if st.button("Lähetä tilaus"):
@@ -310,7 +395,7 @@ def main():
             st.session_state.toimituspaiva = datetime(2025, 6, 1)
 
     # Varaston palautusmahdollisuus
-    if st.checkbox("Palauta varasto"):
+    if st.checkbox("Varaston palautus"):
         salasana = st.text_input("Syötä salasana varaston nollaamiseksi", type="password")
         if st.button("Nollaa varasto"):
             if salasana == "CcdablYgUIcMfZ30gLMB":  # Vaihda halutessasi turvallisempi salasana
