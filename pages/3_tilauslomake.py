@@ -270,6 +270,7 @@ def main():
     # deco_tuotteet = ["Spottivalot", "Valaistus"]
     lisatuote = "Lisätuote"
     custom_standi = "Standi paketti Custom"  # Custom-standi tunnistus
+    infran_tuotteet = ["info-tv", "kuluttaja-tv"]
 
     # Tuotekokonaisuudet expanderilla
     for kokonaisuus, tuotteet in tuotekokonaisuudet.items():
@@ -340,7 +341,7 @@ def main():
                             args=(tuote_avain, leveys_key, pituus_key)
                         )
                     
-                    elif st.session_state.valitut_tuotteet[tuote_avain] > 0 and (tuote_avain in verkko_tuotteet or tuote_avain in sahko_tuotteet or tuote_avain == lisatuote):
+                    elif st.session_state.valitut_tuotteet[tuote_avain] > 0 and (tuote_avain in verkko_tuotteet or tuote_avain in sahko_tuotteet or tuote_avain == lisatuote or infran_tuotteet):
                         lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
                         def update_lisatieto(tuote=tuote_avain, lisatieto_key=lisatieto_key):
                             st.session_state.lisatiedot[tuote] = st.session_state[lisatieto_key]

@@ -37,8 +37,8 @@ st.markdown(
     TV:
     | Nimi | Lisätiedot|
     |-------|------|
-    | info-tv | 42" - 55" |
-    | Kuluttaja-tv | 42" - 55" |
+    | info-tv | 42" - 55", kun tilaat niin kerro mihin tulee |
+    | Kuluttaja-tv | 42" - 55", kun tilaat niin kerro mihin tulee |
     | TV virtakaapeli ja hdmi kaapeli | |
     | Tv lattiajalat | |
     | TV Trussi-kiinnitys | |
