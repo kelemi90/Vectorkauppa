@@ -352,18 +352,18 @@ def main():
                             on_change=update_lisatieto
                         )
                     # Näytä lisätietokenttä vain, jos määrä > 0
-                    elif st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
-                        lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
+                    # elif st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
+                    #     lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
                         
-                        def update_lisatieto(tuote=tuote, lisatieto_key=lisatieto_key):
-                            st.session_state.lisatiedot[tuote] = st.session_state[lisatieto_key]
+                    #     def update_lisatieto(tuote=tuote, lisatieto_key=lisatieto_key):
+                    #         st.session_state.lisatiedot[tuote] = st.session_state[lisatieto_key]
 
-                        st.text_input(
-                            f"Lisätiedot: {tuote}",
-                            value=st.session_state.lisatiedot.get(tuote, ""),
-                            key=lisatieto_key,
-                            on_change=update_lisatieto
-                        )
+                    #     st.text_input(
+                    #         f"Lisätiedot: {tuote}",
+                    #         value=st.session_state.lisatiedot.get(tuote, ""),
+                    #         key=lisatieto_key,
+                    #         on_change=update_lisatieto
+                    #     )
 
     # Näytä valittujen tuotteiden yhteenveto tuotekokonaisuuksittain
     st.subheader("Valittujen tuotteiden yhteenveto")
