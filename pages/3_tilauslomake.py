@@ -71,7 +71,6 @@ alkuperaiset_maarat = {
     "Mikro": 2,
     "Induktioliesi": 5,
     # Muut
-    "Lisätuote": 1000,
     "Taittojalka": 2,
 
     # Piilotetut tuotteet (vain varastosaldoissa)
@@ -110,6 +109,7 @@ alkuperaiset_maarat = {
     "3D kulma": 1,
     "4D risteys": 4,
     "t-pala": 3,
+    "Lisätuote": 1000,
 }
 
 # Tuotekokonaisuudet (ei sisällä piilotettuja tuotteita)
@@ -156,7 +156,7 @@ tuotekokonaisuudet = {
         "Kylmälaari", "Metallinen jääkaappi/pakastin", "Mikro", "Induktioliesi",
     ],
     "Muut": [
-        "Lisätuote", "Taittojalka"
+        "Taittojalka"
     ]
 }
 
