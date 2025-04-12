@@ -3,6 +3,9 @@
 # DB ignore
 *.db
 
+# folders
+2nd_variaatio
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
