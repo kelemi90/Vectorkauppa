@@ -341,7 +341,7 @@ def main():
                             args=(tuote_avain, leveys_key, pituus_key)
                         )
                     
-                    elif st.session_state.valitut_tuotteet[tuote_avain] > 0 and (tuote_avain in verkko_tuotteet or tuote_avain in sahko_tuotteet or tuote_avain == lisatuote or infran_tuotteet):
+                    elif st.session_state.valitut_tuotteet[tuote_avain] > 0 and (tuote_avain in verkko_tuotteet or tuote_avain in sahko_tuotteet or tuote_avain in infran_tuotteet or  tuote_avain == lisatuote):
                         lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
                         def update_lisatieto(tuote=tuote_avain, lisatieto_key=lisatieto_key):
                             st.session_state.lisatiedot[tuote] = st.session_state[lisatieto_key]
@@ -352,7 +352,7 @@ def main():
                             on_change=update_lisatieto
                         )
                     # Näytä lisätietokenttä vain, jos määrä > 0
-                    # elif st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote):
+                    # elif st.session_state.valitut_tuotteet[tuote] > 0 and (tuote in verkko_tuotteet or tuote in sahko_tuotteet or tuote == lisatuote or infran_tuotteet):
                     #     lisatieto_key = f"{kokonaisuus}_{tuote}_lisatieto"
                         
                     #     def update_lisatieto(tuote=tuote, lisatieto_key=lisatieto_key):
