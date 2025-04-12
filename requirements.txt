@@ -1,5 +1,6 @@
 # Install env
-
+uv init
+uv .venv
 
 # activate env
 source ./env/bin/activate

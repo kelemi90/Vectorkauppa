@@ -40,6 +40,7 @@ alkuperaiset_maarat = {
     "TV Trussi-kiinnitys": 20,
     "Tv pöytäjalat": 28,
     # Sähkö ja verkko
+    "Sähköt 230V": 21,
     "Sähköt 1x16A 230V 3000W": 21,
     "Sähköt 3x16A 400V 9000W": 20,
     "Sähköt 3x32A 400V 15000W": 20,
@@ -138,7 +139,7 @@ tuotekokonaisuudet = {
         "TV Trussi-kiinnitys", "Tv pöytäjalat"
     ],
     "Sähkö ja verkko": [
-        "Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W",
+        "Sähköt 230V", "Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W",
         "Sähköt Muu", "verkko-1G Base-T", "verkko-10G SR", "verkko-10G LR",
         "Verkkokaapeli"
     ],
@@ -265,7 +266,7 @@ def main():
     
     # Verkko-, Sähköt- ja Lisätuote-tunnistus
     verkko_tuotteet = ["verkko-1G Base-T", "verkko-10G SR", "verkko-10G LR"]
-    sahko_tuotteet = ["Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
+    sahko_tuotteet = ["Säjköt 230V", "Sähköt 1x16A 230V 3000W", "Sähköt 3x16A 400V 9000W", "Sähköt 3x32A 400V 15000W", "Sähköt Muu"]
     # deco_tuotteet = ["Spottivalot", "Valaistus"]
     lisatuote = "Lisätuote"
     custom_standi = "Standi paketti Custom"  # Custom-standi tunnistus
