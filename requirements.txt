@@ -1,16 +1,3 @@
-# Install env
-uv init
-uv .venv
-
-# activate env
-source ./env/bin/activate
-
-# Install streamlit
-pip install streamlit
-
-# run etusivu.py
-streamlit run etusivu.py
-
 streamlit
 reportlab
-sqlite3
+pandas

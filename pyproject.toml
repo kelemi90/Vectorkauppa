@@ -4,4 +4,8 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pandas>=2.2.3",
+    "reportlab>=4.4.0",
+    "streamlit>=1.45.0",
+]
