@@ -3,13 +3,13 @@
 1. Install the requirements
 
    ```
-   $ pip install -r requirements.txt
+   $ uv sync
    ```
 
 2. Run the app
 
    ```
-   ¤ streamlit run etusivu.py
+   ¤ uv run streamlit run etusivu.py
    ```
 
 # Verkkokaupan tarkoitus
