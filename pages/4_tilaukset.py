@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 import os
@@ -97,8 +97,8 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
                 ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
             ]))
             elements.append(table)
-            elements.append(Paragraph(" ", styles['Normal']))  # Tyhjä rivi ryhmien välissä
-        
+            elements.append(PageBreak())
+                    
         doc.build(elements)
         
         # Tarjoa PDF-lataus
