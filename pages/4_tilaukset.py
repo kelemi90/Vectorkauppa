@@ -67,28 +67,31 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
         styleWrapped = ParagraphStyle('wrapped', parent=styleN, wordWrap='CJK', fontSize=10)
 
         for idx, row in df.iterrows():
-            # Yhden tilauksen otsikko
             elements.append(Paragraph(f"Tilaus {idx + 1}", styles['Heading2']))
             
             row_data = list(row.values)
+            
             # Muunna 'Lisätiedot' rivittyväksi kappaleeksi
             row_data[4] = Paragraph(str(row_data[4]), styleWrapped)
 
             data = [["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"], row_data]
-            col_widths = [100, 100, 150, 50, 250, 100]
+            col_widths = [100, 100, 150, 50, 250, 100]  # Huom: lisätietojen sarakkeelle iso leveys
 
             table = Table(data, colWidths=col_widths)
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                ('ALIGN', (0, 1), (3, 1), 'CENTER'),  # Keskitetään eka osa datarivistä
+                ('ALIGN', (4, 1), (4, 1), 'LEFT'),    # Rivitetty "Lisätiedot" vasemmalle
+                ('ALIGN', (5, 1), (5, 1), 'CENTER'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                 ('FONTSIZE', (0, 0), (-1, 0), 12),
                 ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
                 ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),
                 ('FONTSIZE', (0, 1), (-1, -1), 10),
-                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('VALIGN', (0, 1), (-1, -1), 'TOP'),  # Parannetaan pystyasettelua
             ]))
             elements.append(table)
             elements.append(PageBreak())
