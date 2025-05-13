@@ -50,39 +50,34 @@ def suodata_tilaukset(kategoriat, toimipiste=None):
     return suodatetut_tilaukset
 
 # Funktio taulukon luomiseen ja PDF-lataukseen vaakatasossa
+from reportlab.platypus import PageBreak, ParagraphStyle
+
 def nayta_tilaukset_taulukkona(tilaukset, otsikko):
     if tilaukset:
-        # Muunna tilaukset DataFrameksi ja poista ID ja Päivämäärä
         df = pd.DataFrame(tilaukset, columns=["ID", "Nimi", "Tuote", "Määrä", "Lisätiedot", "Toimituspiste", "Toimituspäivä", "Päivämäärä"])
-        df = df[["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]  # Uusi järjestys, ID ja Päivämäärä pois
+        df = df[["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]
         
-        # Näytä taulukko Streamlitissä
         st.write(f"### {otsikko}")
         st.dataframe(df, use_container_width=True)
-        
-        # Ryhmittele toimipisteen mukaan PDF:ää varten
-        grouped = df.groupby("Toimituspiste")
+
         buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))  # Vaakataso
+        doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))
         elements = []
         styles = getSampleStyleSheet()
-        
-        # Otsikko PDF:lle
-        elements.append(Paragraph(otsikko, styles['Heading1']))
-        elements.append(Paragraph(" ", styles['Normal']))  # Tyhjä rivi
-        
-        for toimipiste, group in grouped:
-            # Toimipisteen otsikko
-            elements.append(Paragraph(f"Toimituspiste: {toimipiste}", styles['Heading2']))
+        styleN = styles['Normal']
+        styleWrapped = ParagraphStyle('wrapped', parent=styleN, wordWrap='CJK', fontSize=10)
+
+        for idx, row in df.iterrows():
+            # Yhden tilauksen otsikko
+            elements.append(Paragraph(f"Tilaus {idx + 1}", styles['Heading2']))
             
-            # Poista Toimituspiste-sarake ryhmän riveiltä ja luo taulukko
-            group_data = group.drop(columns=["Toimituspiste"]).values.tolist()
-            data = [["Nimi", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]] + group_data
-            
-            # Määritä sarakkeiden leveydet (yhteensä 750 pistettä vaakatasossa A4:lle)
-            col_widths = [100, 200, 50, 200, 200]  # Säädetty sopimaan vaakasivulle ilman ID:tä ja Päivämäärää
-            
-            # Luo taulukko
+            row_data = list(row.values)
+            # Muunna 'Lisätiedot' rivittyväksi kappaleeksi
+            row_data[4] = Paragraph(str(row_data[4]), styleWrapped)
+
+            data = [["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"], row_data]
+            col_widths = [100, 100, 150, 50, 250, 100]
+
             table = Table(data, colWidths=col_widths)
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
@@ -98,10 +93,10 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
             ]))
             elements.append(table)
             elements.append(PageBreak())
-                    
+
         doc.build(elements)
-        
-        # Tarjoa PDF-lataus
+
+        # Lataa PDF
         pdf_data = buffer.getvalue()
         buffer.close()
         st.download_button(
@@ -112,6 +107,7 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
         )
     else:
         st.write("Ei tilauksia vielä.")
+
 
 # Päänäkymä filttereillä
 def main():
