@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak, ParagraphStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 import os
@@ -50,7 +50,6 @@ def suodata_tilaukset(kategoriat, toimipiste=None):
     return suodatetut_tilaukset
 
 # Funktio taulukon luomiseen ja PDF-lataukseen vaakatasossa
-from reportlab.platypus import PageBreak, ParagraphStyle
 
 def nayta_tilaukset_taulukkona(tilaukset, otsikko):
     if tilaukset:
