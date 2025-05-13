@@ -4,8 +4,8 @@ import pandas as pd
 from datetime import datetime
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak, ParagraphStyle
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from io import BytesIO
 import os
 
