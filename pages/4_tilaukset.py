@@ -2,10 +2,12 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 from datetime import datetime
+import textwrap
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.enums import TA_LEFT
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from io import BytesIO
 import os
 
@@ -56,33 +58,46 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
         # Muunna tilaukset DataFrameksi ja poista ID ja Päivämäärä
         df = pd.DataFrame(tilaukset, columns=["ID", "Nimi", "Tuote", "Määrä", "Lisätiedot", "Toimituspiste", "Toimituspäivä", "Päivämäärä"])
         df = df[["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]  # Uusi järjestys, ID ja Päivämäärä pois
-        
+
         # Näytä taulukko Streamlitissä
         st.write(f"### {otsikko}")
         st.dataframe(df, use_container_width=True)
-        
+
         # Ryhmittele toimipisteen mukaan PDF:ää varten
         grouped = df.groupby("Toimituspiste")
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))  # Vaakataso
         elements = []
         styles = getSampleStyleSheet()
-        
+
+        # Tyylit kappaleille
+        wrap_style = ParagraphStyle(
+            name='WrapStyle',
+            fontName='Helvetica',
+            fontSize=10,
+            leading=12,
+            alignment=TA_LEFT
+        )
+
         # Otsikko PDF:lle
         elements.append(Paragraph(otsikko, styles['Heading1']))
         elements.append(Paragraph(" ", styles['Normal']))  # Tyhjä rivi
-        
+
         for toimipiste, group in grouped:
             # Toimipisteen otsikko
             elements.append(Paragraph(f"Toimituspiste: {toimipiste}", styles['Heading2']))
-            
-            # Poista Toimituspiste-sarake ryhmän riveiltä ja luo taulukko
-            group_data = group.drop(columns=["Toimituspiste"]).values.tolist()
+
+            # Poista Toimituspiste-sarake ja muotoile taulukon tiedot
+            group_data = []
+            for row in group.drop(columns=["Toimituspiste"]).values.tolist():
+                row[3] = Paragraph(str(row[3]), wrap_style)  # Lisätiedot-sarake
+                group_data.append(row)
+
             data = [["Nimi", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]] + group_data
-            
-            # Määritä sarakkeiden leveydet (yhteensä 750 pistettä vaakatasossa A4:lle)
-            col_widths = [100, 200, 50, 200, 200]  # Säädetty sopimaan vaakasivulle ilman ID:tä ja Päivämäärää
-            
+
+            # Sarakeleveydet
+            col_widths = [100, 200, 50, 250, 150]
+
             # Luo taulukko
             table = Table(data, colWidths=col_widths)
             table.setStyle(TableStyle([
@@ -95,13 +110,13 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
                 ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),
                 ('FONTSIZE', (0, 1), (-1, -1), 10),
-                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ]))
             elements.append(table)
             elements.append(PageBreak())
-                    
+
         doc.build(elements)
-        
+
         # Tarjoa PDF-lataus
         pdf_data = buffer.getvalue()
         buffer.close()
