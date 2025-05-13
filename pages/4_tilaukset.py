@@ -42,9 +42,8 @@ def suodata_tilaukset(kategoriat, toimipiste=None):
             continue
         
         for kategoria in kategoriat:
-            if tuote in tuotekokonaisuudet[kategoria] and tuote not in kaytetyt_tuotteet:
+            if tuote in tuotekokonaisuudet[kategoria]:
                 suodatetut_tilaukset.append(tilaus)
-                kaytetyt_tuotteet.add(tuote)
                 break
     
     return suodatetut_tilaukset
