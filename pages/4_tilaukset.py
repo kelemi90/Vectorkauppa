@@ -50,11 +50,10 @@ def suodata_tilaukset(kategoriat, toimipiste=None):
     return suodatetut_tilaukset
 
 # Funktio taulukon luomiseen ja PDF-lataukseen vaakatasossa
-
 def nayta_tilaukset_taulukkona(tilaukset, otsikko):
     if tilaukset:
-        df = pd.DataFrame(tilaukset, columns=["ID", "Nimi", "Tuote", "Määrä", "Lisätiedot", "Toimituspiste", "Toimituspäivä", "Päivämäärä"])
-        df = df[["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]
+        df = pd.DataFrame(tilaukset, columns=["ID", "Nimi", "Tilauskokonaisuus", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä", "Päivämäärä"])
+        df = df[["Nimi", "Tilauskokonaisuus", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]
         
         st.write(f"### {otsikko}")
         st.dataframe(df, use_container_width=True)
@@ -66,32 +65,33 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
         styleN = styles['Normal']
         styleWrapped = ParagraphStyle('wrapped', parent=styleN, wordWrap='CJK', fontSize=10)
 
-        for idx, row in df.iterrows():
-            elements.append(Paragraph(f"Tilaus {idx + 1}", styles['Heading2']))
-            
-            row_data = list(row.values)
-            
-            # Muunna 'Lisätiedot' rivittyväksi kappaleeksi
-            row_data[4] = Paragraph(str(row_data[4]), styleWrapped)
+        # Ryhmittele tilaukset Nimi + Tilauskokonaisuus -tunnisteen mukaan
+        grouped = df.groupby(['Nimi', 'Tilauskokonaisuus'])
 
-            data = [["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"], row_data]
-            col_widths = [100, 100, 150, 50, 250, 100]  # Huom: lisätietojen sarakkeelle iso leveys
+        for (nimi, kokonaisuus), group in grouped:
+            elements.append(Paragraph(f"{nimi} – {kokonaisuus}", styles['Heading2']))
 
+            data = [["Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]
+            for _, row in group.iterrows():
+                tuote = str(row["Tuote"])
+                maara = str(row["Määrä"])
+                lisatiedot = Paragraph(str(row["Lisätiedot"]), styleWrapped)
+                paiva = str(row["Toimituspäivä"])
+                data.append([tuote, maara, lisatiedot, paiva])
+
+            col_widths = [200, 50, 300, 100]
             table = Table(data, colWidths=col_widths)
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
                 ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-                ('ALIGN', (0, 1), (3, 1), 'CENTER'),  # Keskitetään eka osa datarivistä
-                ('ALIGN', (4, 1), (4, 1), 'LEFT'),    # Rivitetty "Lisätiedot" vasemmalle
-                ('ALIGN', (5, 1), (5, 1), 'CENTER'),
+                ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                 ('FONTSIZE', (0, 0), (-1, 0), 12),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('FONTSIZE', (0, 1), (-1, -1), 10),
                 ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                ('FONTSIZE', (0, 1), (-1, -1), 10),
-                ('VALIGN', (0, 1), (-1, -1), 'TOP'),  # Parannetaan pystyasettelua
+                ('VALIGN', (0, 1), (-1, -1), 'TOP'),
             ]))
             elements.append(table)
             elements.append(PageBreak())
@@ -109,7 +109,6 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
         )
     else:
         st.write("Ei tilauksia vielä.")
-
 
 # Päänäkymä filttereillä
 def main():
