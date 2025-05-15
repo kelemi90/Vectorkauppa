@@ -31,7 +31,7 @@ if query_params.get("page") == "secret":
             try:
                 conn = sqlite3.connect(db_path)
                 c = conn.cursor()
-                c.execute("UPDATE varasto SET saldo = saldo + ? WHERE tuote = ?", (maara, tuotenimi))
+                c.execute("UPDATE varasto SET maara = maara + ? WHERE tuote = ?", (maara, tuotenimi))
                 if c.rowcount == 0:
                     st.warning("Tuotetta ei löytynyt.")
                 else:
