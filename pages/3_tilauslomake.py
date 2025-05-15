@@ -15,7 +15,7 @@ alkuperaiset_maarat = {
     "Vaneripöydät G": 158,
     "Vaneripöydät H": 16,
     "Vaneripöydät F-info": 3,
-    "Tuoli": 267,
+    "Tuoli": 1300,
     "Sohva": 4,
     "Säkkituoli, musta": 4,
     # Koneet ja toimistotarvikkeet
