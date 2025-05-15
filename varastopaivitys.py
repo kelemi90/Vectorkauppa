@@ -18,7 +18,7 @@ if salasana != "CcdablYgUIcMfZ30gLMB":
 st.success("Tervetuloa!")
 
 # Yhteys tietokantaan
-db_path = "pages/varasto.db"
+db_path = "varasto.db"
 
 # Lomake varaston päivitykseen
 with st.form("päivityslomake"):

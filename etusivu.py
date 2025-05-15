@@ -20,7 +20,7 @@ if query_params.get("page") == "secret":
 
     st.success("Tervetuloa varastonhallintaan!")
 
-    db_path = "pages/varasto.db"
+    db_path = "varasto.db"
 
     with st.form("paivitys_lomake"):
         tuotenimi = st.text_input("Tuotteen nimi:")
