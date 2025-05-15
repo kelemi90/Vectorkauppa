@@ -248,6 +248,8 @@ def laske_kokonaisuuksien_maarat(valitut_tuotteet, tuotekokonaisuudet):
 def main():
     init_db()
     varasto = hae_varasto()
+    if st.button("🔄 Päivitä varastonäkymä"):
+        st.rerun()
 
     if 'valitut_tuotteet' not in st.session_state:
         st.session_state.valitut_tuotteet = {tuote: 0 for tuote in alkuperaiset_maarat.keys()}
