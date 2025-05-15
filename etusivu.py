@@ -4,12 +4,12 @@ from urllib.parse import parse_qs
 
 st.set_page_config(
     page_title="Etusivu",
-    layout="centered",  # Estää sivun ankkuroitumisen vasempaan reunaan
+    layout="centered",
 )
 
-# Tarkistetaan, onko URL-parametrina salainen sivu
-query_params = st.experimental_get_query_params()
-if "page" in query_params and query_params["page"][0] == "secret":
+# UUSI TAPA: Tarkista URL-parametrit
+query_params = st.query_params
+if query_params.get("page") == "secret":
     st.title("🔒 Varaston päivitys")
 
     salasana = st.text_input("Syötä salasana:", type="password")
@@ -20,7 +20,6 @@ if "page" in query_params and query_params["page"][0] == "secret":
 
     st.success("Tervetuloa varastonhallintaan!")
 
-    # Lomake varastosaldon päivittämiseen
     db_path = "pages/varasto.db"
 
     with st.form("paivitys_lomake"):
@@ -41,7 +40,7 @@ if "page" in query_params and query_params["page"][0] == "secret":
                 conn.close()
             except Exception as e:
                 st.error(f"Virhe: {e}")
-    st.stop()  # Estä muun sisällön näyttäminen
+    st.stop()
 
 # Oletusnäkymä (etusivu)
 st.title("Vector infrashop kauppa")

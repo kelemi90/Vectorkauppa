@@ -188,7 +188,14 @@ def paivita_varasto(valitut_tuotteet):
     c = conn.cursor()
     for tuote, maara in valitut_tuotteet.items():
         if maara > 0:
-            c.execute("UPDATE varasto SET maara = maara - ? WHERE tuote = ?", (maara, tuote))
+            # Haetaan nykyinen saldo
+            c.execute("SELECT maara FROM varasto WHERE tuote = ?", (tuote,))
+            nykyinen_maara = c.fetchone()
+            if nykyinen_maara:
+                uusi_maara = nykyinen_maara[0] - maara
+                if uusi_maara < 0:
+                    uusi_maara = 0
+                c.execute("UPDATE varasto SET maara = ? WHERE tuote = ?", (uusi_maara, tuote))
     conn.commit()
     conn.close()
 
@@ -390,6 +397,7 @@ def main():
             )
             st.success(f"Kiitos, {st.session_state.nimi}! Tilauksesi on vastaanotettu.")
             # Nollaa lomake
+            varasto = hae_varasto()
             st.session_state.valitut_tuotteet = {tuote: 0 for tuote in alkuperaiset_maarat.keys()}
             st.session_state.lisatiedot = {}
             st.session_state.nimi = ""
