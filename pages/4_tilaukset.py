@@ -37,7 +37,7 @@ def suodata_tilaukset(kategoriat, toimipiste=None):
     kaytetyt_tuotteet = set()
 
     if toimipiste:
-        toimipiste = toimipiste.lower().stip()
+        toimipiste = toimipiste.lower().strip()
     
     for tilaus in tilaukset:
         tuote = tilaus[2]  # Tuote on sarakkeessa 2
