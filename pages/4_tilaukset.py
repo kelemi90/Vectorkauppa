@@ -34,21 +34,22 @@ def hae_tilaukset():
 def suodata_tilaukset(kategoriat, toimipiste=None):
     tilaukset = hae_tilaukset()
     suodatetut_tilaukset = []
-    kaytetyt_tuotteet = set()
 
     if toimipiste:
         toimipiste = toimipiste.lower().strip()
-    
+    else:
+        toimipiste = None
+
     for tilaus in tilaukset:
-        tuote = tilaus[2]  # Tuote on sarakkeessa 2
-        if toimipiste and tilaus[5] != toimipiste:  # Toimituspiste on sarakkeessa 5
+        tila_toimipiste = tilaus[5].lower()
+        if toimipiste and toimipiste not in tila_toimipiste:
             continue
         
+        tuote = tilaus[2]
         for kategoria in kategoriat:
             if tuote in tuotekokonaisuudet[kategoria]:
                 suodatetut_tilaukset.append(tilaus)
                 break
-    
     return suodatetut_tilaukset
 
 # Funktio taulukon luomiseen ja PDF-lataukseen vaakatasossa
