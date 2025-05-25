@@ -35,6 +35,9 @@ def suodata_tilaukset(kategoriat, toimipiste=None):
     tilaukset = hae_tilaukset()
     suodatetut_tilaukset = []
     kaytetyt_tuotteet = set()
+
+    if toimipiste:
+        toimipiste = toimipiste.lower()
     
     for tilaus in tilaukset:
         tuote = tilaus[2]  # Tuote on sarakkeessa 2
