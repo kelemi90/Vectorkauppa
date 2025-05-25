@@ -1,5 +1,3 @@
-# varastopaivitys.py
-
 import streamlit as st
 import sqlite3
 
@@ -11,16 +9,14 @@ st.title("🔒 Varaston päivitys")
 salasana = st.text_input("Syötä salasana:", type="password")
 
 if salasana != "CcdablYgUIcMfZ30gLMB":
-    if salasana:  # Jos syötti jotain mutta väärin
+    if salasana:
         st.error("Väärä salasana.")
     st.stop()
 
 st.success("Tervetuloa!")
 
-# Yhteys tietokantaan
 db_path = "varasto.db"
 
-# Lomake varaston päivitykseen
 with st.form("päivityslomake"):
     tuotenimi = st.text_input("Tuotteen nimi (täsmälleen kuten tietokannassa):")
     maara = st.number_input("Lisättävä määrä:", min_value=1, step=1)
@@ -31,14 +27,14 @@ with st.form("päivityslomake"):
             conn = sqlite3.connect(db_path)
             c = conn.cursor()
 
-            # Päivitä olemassa olevan tuotteen saldo
             c.execute("UPDATE varasto SET maara = maara + ? WHERE tuote = ?", (maara, tuotenimi))
             if c.rowcount == 0:
-                st.warning("Tuotetta ei löytynyt. Varmista nimi.")
+                c.execute("INSERT INTO varasto (tuote, maara) VALUES (?, ?)", (tuotenimi, maara))
+                st.success(f"Tuote '{tuotenimi}' lisätty uutena varastoon määrällä {maara} kpl.")
             else:
-                conn.commit()
                 st.success(f"Lisättiin {maara} kpl tuotetta '{tuotenimi}' varastoon.")
 
+            conn.commit()
             conn.close()
         except Exception as e:
             st.error(f"Virhe päivityksessä: {e}")
