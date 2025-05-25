@@ -32,7 +32,7 @@ with st.form("päivityslomake"):
             c = conn.cursor()
 
             # Päivitä olemassa olevan tuotteen saldo
-            c.execute("UPDATE varasto SET saldo = saldo + ? WHERE tuote = ?", (maara, tuotenimi))
+            c.execute("UPDATE varasto SET maara = maara + ? WHERE tuote = ?", (maara, tuotenimi))
             if c.rowcount == 0:
                 st.warning("Tuotetta ei löytynyt. Varmista nimi.")
             else:

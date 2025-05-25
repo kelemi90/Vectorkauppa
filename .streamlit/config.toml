@@ -1,0 +1,7 @@
+[server]
+headless = true
+
+[browser]
+serverAddress = "infrashop.vectorama.fi"
+serverPort = 443
+gatherUsageStats = false
