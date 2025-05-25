@@ -72,6 +72,7 @@ alkuperaiset_maarat = {
     "Induktioliesi": 5,
     # Muut
     "Taittojalka": 2,
+    "Valkokangas": 1,
 
     # Piilotetut tuotteet (vain varastosaldoissa)
     "RGB lediputki 201cm pyöreä": 188,
@@ -110,7 +111,7 @@ alkuperaiset_maarat = {
     "4D risteys": 4,
     "t-pala": 3,
     "Lisätuote": 1000,
-    "Valkokangas": 1,
+
 }
 
 # Tuotekokonaisuudet (ei sisällä piilotettuja tuotteita)
