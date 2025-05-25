@@ -5,7 +5,7 @@ from datetime import datetime
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from io import BytesIO
 import os
 
@@ -53,35 +53,58 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
     if tilaukset:
         # Muunna tilaukset DataFrameksi ja poista ID ja Päivämäärä
         df = pd.DataFrame(tilaukset, columns=["ID", "Nimi", "Tuote", "Määrä", "Lisätiedot", "Toimituspiste", "Toimituspäivä", "Päivämäärä"])
-        df = df[["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]  # Uusi järjestys, ID ja Päivämäärä pois
-        
-        # Näytä taulukko Streamlitissä
-        st.write(f"### {otsikko}")
-        st.dataframe(df, use_container_width=True)
-        
-        # Ryhmittele toimipisteen mukaan PDF:ää varten
+        df = df[["Nimi", "Toimituspiste", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]]
+
+        # Ryhmittele toimituspisteittäin
         grouped = df.groupby("Toimituspiste")
-        buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))  # Vaakataso
-        elements = []
-        styles = getSampleStyleSheet()
-        
-        # Otsikko PDF:lle
-        elements.append(Paragraph(otsikko, styles['Heading1']))
-        elements.append(Paragraph(" ", styles['Normal']))  # Tyhjä rivi
+
+        st.write(f"### {otsikko}")
+
+
+        grouped = df.groupby("Toimituspiste")
         
         for toimipiste, group in grouped:
-            # Toimipisteen otsikko
+            tilausten_maara = len(group)
+
+            with st.expander(f"Toimituspiste: {toimipiste} ({tilausten_maara} tilausta)", expanded=False):
+                st.dataframe(group, use_container_width=True)
+
+        # PDF:n valmistelu
+        grouped = df.groupby("Toimituspiste")
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))
+        elements = []
+        styles = getSampleStyleSheet()
+
+        # Otsikko PDF:lle
+        elements.append(Paragraph(otsikko, styles['Heading1']))
+        elements.append(Paragraph(" ", styles['Normal']))
+
+        # Lisätiedot-sarakkeen rivitystyylit
+        custom_style = ParagraphStyle(
+            name='Custom',
+            fontSize=10,
+            leading=12,
+            spaceAfter=4,
+            wordWrap='CJK',
+        )
+
+        for toimipiste, group in grouped:
             elements.append(Paragraph(f"Toimituspiste: {toimipiste}", styles['Heading2']))
-            
-            # Poista Toimituspiste-sarake ryhmän riveiltä ja luo taulukko
-            group_data = group.drop(columns=["Toimituspiste"]).values.tolist()
+
+            # Muodosta rivit ja rivitä 'Lisätiedot'-kenttä (indeksi 3)
+            group_data = []
+            for _, row in group.drop(columns=["Toimituspiste"]).iterrows():
+                rivi = list(row)
+                rivi[3] = Paragraph(str(rivi[3]), custom_style)  # 'Lisätiedot'
+                group_data.append(rivi)
+
+            # Taulukon otsikko + data
             data = [["Nimi", "Tuote", "Määrä", "Lisätiedot", "Toimituspäivä"]] + group_data
-            
-            # Määritä sarakkeiden leveydet (yhteensä 750 pistettä vaakatasossa A4:lle)
-            col_widths = [100, 200, 50, 200, 200]  # Säädetty sopimaan vaakasivulle ilman ID:tä ja Päivämäärää
-            
-            # Luo taulukko
+
+            # Sarakeleveydet PDF:lle (yhteensä noin 750 pistettä vaakatasossa)
+            col_widths = [100, 150, 50, 250, 200]
+
             table = Table(data, colWidths=col_widths)
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
@@ -97,9 +120,9 @@ def nayta_tilaukset_taulukkona(tilaukset, otsikko):
             ]))
             elements.append(table)
             elements.append(PageBreak())
-                    
+
         doc.build(elements)
-        
+
         # Tarjoa PDF-lataus
         pdf_data = buffer.getvalue()
         buffer.close()
