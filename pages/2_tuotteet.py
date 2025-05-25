@@ -89,5 +89,6 @@ st.markdown(
     | Nimi | Lisäinfo |
     |-------|------|
     | Taittojalka | |
+    | Valkokangas | | 
 """
 )

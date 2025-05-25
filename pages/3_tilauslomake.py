@@ -110,6 +110,7 @@ alkuperaiset_maarat = {
     "4D risteys": 4,
     "t-pala": 3,
     "Lisätuote": 1000,
+    "Valkokangas": 1,
 }
 
 # Tuotekokonaisuudet (ei sisällä piilotettuja tuotteita)
@@ -156,7 +157,7 @@ tuotekokonaisuudet = {
         "Kylmälaari", "Metallinen jääkaappi/pakastin", "Mikro", "Induktioliesi",
     ],
     "Muut": [
-        "Taittojalka"
+        "Taittojalka", "Valkokangas"
     ]
 }
 
