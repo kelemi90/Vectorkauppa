@@ -14,6 +14,7 @@ if tilaukset_df.empty:
     st.info("Ei tilauksia.")
     st.stop()
 
+
 # Ohjeistus
 st.markdown("""
         ## Tilausten hallinta
@@ -26,6 +27,8 @@ st.markdown("""
         
         #### **Huom:** Poistaminen on pysyvää, joten varmista, että haluat todella poistaa tilaukset ennen kuin teet sen.
             """)
+
+
 # Toimituspisteen valinta
 toimituspisteet = tilaukset_df["toimituspiste"].dropna().unique()
 valittu_piste = st.selectbox("Valitse toimituspiste", toimituspisteet)
@@ -51,36 +54,76 @@ with st.form("hallintalomake"):
 
     if paivita:
         try:
-            conn = sqlite3.connect('tilaukset.db')
-            c = conn.cursor()
+            # Avaa molemmat tietokannat
+            conn_tilaukset = sqlite3.connect('tilaukset.db')
+            c_tilaukset = conn_tilaukset.cursor()
+
+            conn_varasto = sqlite3.connect('varasto.db')
+            c_varasto = conn_varasto.cursor()
+
             for _, rivi in muokattu_df.iterrows():
                 if not rivi["Poista"]:
-                    c.execute("""
+                    # Haetaan alkuperäinen tilausmäärä tietokannasta
+                    c_tilaukset.execute("SELECT maara, tuote FROM tilaukset WHERE id = ?", (rivi["id"],))
+                    tulos = c_tilaukset.fetchone()
+                    if tulos is None:
+                        continue
+                    alkuperainen_maara, tuote = tulos
+
+                    uusi_maara = rivi["maara"]
+
+                    maara_ero = uusi_maara - alkuperainen_maara  # Positiivinen = lisäys, negatiivinen = vähennys
+
+                    # Päivitä tilaus
+                    c_tilaukset.execute("""
                         UPDATE tilaukset SET
                             nimi = ?, tuote = ?, maara = ?, lisatiedot = ?,
                             toimituspiste = ?, toimituspaiva = ?
                         WHERE id = ?
                     """, (
-                        rivi["nimi"], rivi["tuote"], rivi["maara"], rivi["lisatiedot"],
+                        rivi["nimi"], rivi["tuote"], uusi_maara, rivi["lisatiedot"],
                         rivi["toimituspiste"], rivi["toimituspaiva"], rivi["id"]
                     ))
-            conn.commit()
-            conn.close()
-            st.success("Valitut tilaukset päivitetty onnistuneesti.")
+
+                    # Päivitä varasto: vähennetään saldoa maara_eron verran (koska tilaus on varattu)
+                    c_varasto.execute("UPDATE varasto SET maara = maara - ? WHERE tuote = ?", (maara_ero, tuote))
+
+            conn_tilaukset.commit()
+            conn_tilaukset.close()
+
+            conn_varasto.commit()
+            conn_varasto.close()
+
+            st.success("Valitut tilaukset ja varasto päivitetty onnistuneesti.")
             st.rerun()
+
         except Exception as e:
             st.error(f"Virhe päivityksessä: {e}")
 
     if poista:
         try:
-            conn = sqlite3.connect('tilaukset.db')
-            c = conn.cursor()
+            conn_tilaukset = sqlite3.connect('tilaukset.db')
+            c_tilaukset = conn_tilaukset.cursor()
+
+            conn_varasto = sqlite3.connect('varasto.db')
+            c_varasto = conn_varasto.cursor()
+
             poistettavat = muokattu_df[muokattu_df["Poista"]]
+
             for _, rivi in poistettavat.iterrows():
-                c.execute("DELETE FROM tilaukset WHERE id = ?", (rivi["id"],))
-            conn.commit()
-            conn.close()
-            st.success("Valitut tilaukset poistettu onnistuneesti.")
+                # Palauta varaston saldoon tilauksen määrä
+                c_varasto.execute("UPDATE varasto SET maara = maara + ? WHERE tuote = ?", (rivi["maara"], rivi["tuote"]))
+                # Poista tilaus
+                c_tilaukset.execute("DELETE FROM tilaukset WHERE id = ?", (rivi["id"],))
+
+            conn_tilaukset.commit()
+            conn_tilaukset.close()
+
+            conn_varasto.commit()
+            conn_varasto.close()
+
+            st.success("Valitut tilaukset poistettu ja varasto päivitetty onnistuneesti.")
             st.rerun()
+
         except Exception as e:
             st.error(f"Virhe poistossa: {e}")
