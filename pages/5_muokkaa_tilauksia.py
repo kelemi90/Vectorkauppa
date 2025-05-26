@@ -5,7 +5,6 @@ import pandas as pd
 st.set_page_config(page_title="Tilausten hallinta", layout="wide")
 st.title("📦 Tilausten muokkaus ja poisto")
 
-
 if "ohje_luettu" not in st.session_state:
     st.session_state.ohje_luettu = False
 
@@ -13,21 +12,10 @@ if not st.session_state.ohje_luettu:
     st.warning("Ole hyvä ja lue ohjeet ennen tilausten muokkausta!")
     st.write("""
         Ohjeet:
-             
-        - Voit muokata tai poistaa tilauksia. Valitse toimituspiste, jonka tilauksia haluat hallita. Kun olet valinnut toimituspisteen, 
-            näet siihen liittyvät tilaukset ja voit alkaa muokkaamaan niitä suoraan taulukosta tai valita poistettavat tilaukset 
-            "Poista"-valintaruudusta.
-            
-        - Muista, että muutokset tallennetaan tietokantaan, joten varmista, että teet muutokset huolellisesti. 
-            Kun olet tehnyt muutokset, klikkaa "Päivitä valitut tilaukset" tallentaaksesi ne tai "Poista valitut tilaukset" poistaaksesi ne 
-            tietokannasta.
-        
-        - Et voi tehdä muutoksia tilauksiin ja samalla poistaa toista kohtaa, joten tee ensin kaikki haluamasi muutokset ja tallenna ne
-            ennen kuin poistat tilauksia.
-        
-        - #### **Huom:** Poistaminen on pysyvää, joten varmista, että haluat todella poistaa tilaukset ennen kuin teet sen.
+        - Voit muokata tai poistaa tilauksia. Valitse toimituspiste, jonka tilauksia haluat hallita.
+        - Tee ensin kaikki haluamasi muutokset ja tallenna ne ennen kuin poistat tilauksia.
+        - Poistaminen on pysyvää, joten ole varovainen.
     """)
-
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Kyllä, olen lukenut ohjeet"):
@@ -38,7 +26,7 @@ if not st.session_state.ohje_luettu:
             st.info("Ole hyvä ja lue ohjeet huolellisesti ennen jatkamista.")
     st.stop()
 
-# Yhdistä tietokantaan ja hae tilaukset
+# --- Ladataan tilaukset ---
 conn = sqlite3.connect('tilaukset.db')
 tilaukset_df = pd.read_sql_query("SELECT * FROM tilaukset", conn)
 conn.close()
@@ -47,26 +35,22 @@ if tilaukset_df.empty:
     st.info("Ei tilauksia.")
     st.stop()
 
-
 # Ohjeistus
 st.markdown("""
-        ## Tilausten hallinta
-            
-        Voit muokata tai poistaa tilauksia. Valitse toimituspiste, jonka tilauksia haluat hallita. Kun olet valinnut toimituspisteen, näet siihen liittyvät tilaukset ja voit alkaa muokkaamaan niitä suoraan taulukosta tai valita poistettavat tilaukset "Poista"-valintaruudusta.
-        
-        Muista, että muutokset tallennetaan tietokantaan, joten varmista, että teet muutokset huolellisesti. Kun olet tehnyt muutokset, klikkaa "Päivitä valitut tilaukset" tallentaaksesi ne tai "Poista valitut tilaukset" poistaaksesi ne tietokannasta.
-        
-        Et voi tehdä muutoksia tilauksiin ja samalla poistaa toista kohtaa, joten tee ensin kaikki haluamasi muutokset ja tallenna ne ennen kuin poistat tilauksia.
-        
-        #### **Huom:** Poistaminen on pysyvää, joten varmista, että haluat todella poistaa tilaukset ennen kuin teet sen.
-            """)
+		## Tilausten hallinta
 
+		Voit muokata tai poistaa tilauksia. Valitse toimituspiste, jonka tilauksia haluat hallita. Kun olet valinnut toimituspisteen, näet siihen liittyvät tilaukset ja voit alkaa muokkaamaan niitä suoraan taulukosta tai valita poistettavat tilaukset "Poista"-valintaruudusta.
 
-# Toimituspisteen valinta
+		Muista, että muutokset tallennetaan tietokantaan, joten varmista, että teet muutokset huolellisesti. Kun olet tehnyt muutokset, klikkaa "Päivitä valitut tilaukset" tallentaaksesi ne tai "Poista valitut tilaukset" poistaaksesi ne tietokannasta.
+
+		Et voi tehdä muutoksia tilauksiin ja samalla poistaa toista kohtaa, joten tee ensin kaikki haluamasi muutokset ja tallenna ne ennen kuin poistat tilauksia.
+
+		#### **Huom:** Poistaminen on pysyvää, joten varmista, että haluat todella poistaa tilaukset ennen kuin teet sen.
+		""")
+
+# --- Valitse toimituspiste ---
 toimituspisteet = tilaukset_df["toimituspiste"].dropna().unique()
 valittu_piste = st.selectbox("Valitse toimituspiste", toimituspisteet)
-
-# Suodata tilaukset toimituspisteen mukaan
 suodatettu_df = tilaukset_df[tilaukset_df["toimituspiste"] == valittu_piste].reset_index(drop=True)
 
 if suodatettu_df.empty:
@@ -75,11 +59,22 @@ if suodatettu_df.empty:
 
 st.subheader(f"Tilaukset toimituspisteelle: {valittu_piste}")
 
-# Lisää Poista-valintaruutu
+# --- Lisää "Poista"-sarake ---
 suodatettu_df["Poista"] = False
 
-# Näytä muokattava taulukko
-muokattu_df = st.data_editor(suodatettu_df, num_rows="dynamic")
+# --- Haetaan varastotuotteet alasvetovalikkoon ---
+conn_varasto = sqlite3.connect('varasto.db')
+varasto_tuotteet = pd.read_sql_query("SELECT DISTINCT tuote FROM varasto", conn_varasto)["tuote"].tolist()
+conn_varasto.close()
+
+# --- Näytetään muokattava taulukko, tuote-sarakkeessa alasvetovalikko ---
+muokattu_df = st.data_editor(
+    suodatettu_df,
+    num_rows="dynamic",
+    column_config={
+        "tuote": st.column_config.SelectboxColumn("Tuote", options=varasto_tuotteet),
+    }
+)
 
 with st.form("hallintalomake"):
     paivita = st.form_submit_button("💾 Päivitä valitut tilaukset")
@@ -87,7 +82,6 @@ with st.form("hallintalomake"):
 
     if paivita:
         try:
-            # Avaa molemmat tietokannat
             conn_tilaukset = sqlite3.connect('tilaukset.db')
             c_tilaukset = conn_tilaukset.cursor()
 
@@ -96,16 +90,14 @@ with st.form("hallintalomake"):
 
             for _, rivi in muokattu_df.iterrows():
                 if not rivi["Poista"]:
-                    # Haetaan alkuperäinen tilausmäärä tietokannasta
+                    # Haetaan alkuperäinen määrä ja tuote
                     c_tilaukset.execute("SELECT maara, tuote FROM tilaukset WHERE id = ?", (rivi["id"],))
                     tulos = c_tilaukset.fetchone()
                     if tulos is None:
                         continue
-                    alkuperainen_maara, tuote = tulos
-
+                    alkuperainen_maara, alkuperainen_tuote = tulos
                     uusi_maara = rivi["maara"]
-
-                    maara_ero = uusi_maara - alkuperainen_maara  # Positiivinen = lisäys, negatiivinen = vähennys
+                    maara_ero = uusi_maara - alkuperainen_maara
 
                     # Päivitä tilaus
                     c_tilaukset.execute("""
@@ -118,13 +110,12 @@ with st.form("hallintalomake"):
                         rivi["toimituspiste"], rivi["toimituspaiva"], rivi["id"]
                     ))
 
-                    # Päivitä varasto: vähennetään saldoa maara_eron verran (koska tilaus on varattu)
-                    c_varasto.execute("UPDATE varasto SET maara = maara - ? WHERE tuote = ?", (maara_ero, tuote))
+                    # Päivitä varasto
+                    c_varasto.execute("UPDATE varasto SET maara = maara - ? WHERE tuote = ?", (maara_ero, alkuperainen_tuote))
 
             conn_tilaukset.commit()
-            conn_tilaukset.close()
-
             conn_varasto.commit()
+            conn_tilaukset.close()
             conn_varasto.close()
 
             st.success("Valitut tilaukset ja varasto päivitetty onnistuneesti.")
@@ -144,15 +135,12 @@ with st.form("hallintalomake"):
             poistettavat = muokattu_df[muokattu_df["Poista"]]
 
             for _, rivi in poistettavat.iterrows():
-                # Palauta varaston saldoon tilauksen määrä
                 c_varasto.execute("UPDATE varasto SET maara = maara + ? WHERE tuote = ?", (rivi["maara"], rivi["tuote"]))
-                # Poista tilaus
                 c_tilaukset.execute("DELETE FROM tilaukset WHERE id = ?", (rivi["id"],))
 
             conn_tilaukset.commit()
-            conn_tilaukset.close()
-
             conn_varasto.commit()
+            conn_tilaukset.close()
             conn_varasto.close()
 
             st.success("Valitut tilaukset poistettu ja varasto päivitetty onnistuneesti.")
