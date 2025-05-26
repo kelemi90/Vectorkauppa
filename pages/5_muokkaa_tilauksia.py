@@ -5,6 +5,39 @@ import pandas as pd
 st.set_page_config(page_title="Tilausten hallinta", layout="wide")
 st.title("📦 Tilausten muokkaus ja poisto")
 
+
+if "ohje_luettu" not in st.session_state:
+    st.session_state.ohje_luettu = False
+
+if not st.session_state.ohje_luettu:
+    st.warning("Ole hyvä ja lue ohjeet ennen tilausten muokkausta!")
+    st.write("""
+        Ohjeet:
+             
+        - Voit muokata tai poistaa tilauksia. Valitse toimituspiste, jonka tilauksia haluat hallita. Kun olet valinnut toimituspisteen, 
+            näet siihen liittyvät tilaukset ja voit alkaa muokkaamaan niitä suoraan taulukosta tai valita poistettavat tilaukset 
+            "Poista"-valintaruudusta.
+            
+        - Muista, että muutokset tallennetaan tietokantaan, joten varmista, että teet muutokset huolellisesti. 
+            Kun olet tehnyt muutokset, klikkaa "Päivitä valitut tilaukset" tallentaaksesi ne tai "Poista valitut tilaukset" poistaaksesi ne 
+            tietokannasta.
+        
+        - Et voi tehdä muutoksia tilauksiin ja samalla poistaa toista kohtaa, joten tee ensin kaikki haluamasi muutokset ja tallenna ne
+            ennen kuin poistat tilauksia.
+        
+        - #### **Huom:** Poistaminen on pysyvää, joten varmista, että haluat todella poistaa tilaukset ennen kuin teet sen.
+    """)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Kyllä, olen lukenut ohjeet"):
+            st.session_state.ohje_luettu = True
+            st.rerun()
+    with col2:
+        if st.button("Ei, näytä ohjeet uudelleen"):
+            st.info("Ole hyvä ja lue ohjeet huolellisesti ennen jatkamista.")
+    st.stop()
+
 # Yhdistä tietokantaan ja hae tilaukset
 conn = sqlite3.connect('tilaukset.db')
 tilaukset_df = pd.read_sql_query("SELECT * FROM tilaukset", conn)
