@@ -60,9 +60,9 @@ st.markdown(
     | Sähköt 1x16A 230V 3000W | 8 konepaikkaa. Sama kuin edellä (käytännössä edellinen on sama kuin tämä) mutta tähän ehkä vähän enemmän valaistusta, tai max 6-8 pöytäkonetta mutta ei muuta. tai esimerkiksi YKSI kahvinkeitin ja pieni jääkaappi. |
     | Sähköt 3x16A 400V 9000W | 24 konepaikkaa. Tähän voi sitten kytkeä jo enempi koneita, tehokkaampia valokannuja, kevyttä keittiövarustusta tai 3D tulostimia yms |
     | Sähköt 3x32A 400V 15000W | 48 konepaikkaa. Tää alkaa olemaan jo aika paljon mutta tähän voi kytkeä jo oikeesti vähän enempi kamaa. Yliopiston standi on ollut muistaakseni ainoa jolle on tarvinut jotain näin tymäkkää tuoda kun siellä oli kaapillinen 3D tulostimia ja laserleikkuria yms Tämä on myös se määrä tai yksikkö jonka esimerkiksi livelava ja sen tekniikka syö sähköä eli saanee vähän osviittaa että tuo on aika paljon sähköä. |
-    | verkko-1G Base-T |  |
-    | verkko-10G SR |  |
-    | verkko-10G LR |  |
+    | verkko-1G Base-T |  1 Gbps -verkkoportti ”RJ45”: Normaali Ethernet eli laniportti. Tilaa yksi kpl per tietokone. Verkko tuo lähistölle kytkimen riittävän monella portilla. Tilaa lisäksi tarvittava määrä verkkokaapeleita ja lisätietoihin arvio pituuksista. |
+    | verkko-10G SR | 10 Gbps -valokuitu, SR, LC-liitin: Valokuitu, multimode. Vaatii erillisen valokuitusovittimen tietokoneesta tai muusta laitteesta. Verkko toimittaa valokuidun pään tilatulle paikalle. |
+    | verkko-10G LR | 10 Gbps -valokuitu, LR, LC-liitin: Valokuitu, singlemode. Vaatii erillisen valokuitusovittimen tietokoneesta tai muusta laitteesta. Verkko toimittaa valokuidun pään tilatulle paikalle. |
     
     Valot:
     | Nimi | Lisäinfoa |
