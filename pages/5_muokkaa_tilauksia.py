@@ -87,7 +87,6 @@ with st.form("hallintalomake"):
 
     if paivita:
         try:
-            # Avaa molemmat tietokannat
             conn_tilaukset = sqlite3.connect('tilaukset.db')
             c_tilaukset = conn_tilaukset.cursor()
 
@@ -96,35 +95,37 @@ with st.form("hallintalomake"):
 
             for _, rivi in muokattu_df.iterrows():
                 if not rivi["Poista"]:
-                    # Haetaan alkuperäinen tilausmäärä tietokannasta
+                    # Hae alkuperäiset tiedot
                     c_tilaukset.execute("SELECT maara, tuote FROM tilaukset WHERE id = ?", (rivi["id"],))
                     tulos = c_tilaukset.fetchone()
                     if tulos is None:
                         continue
-                    alkuperainen_maara, tuote = tulos
+                    alkuperainen_maara, alkuperainen_tuote = tulos
 
                     uusi_maara = rivi["maara"]
+                    uusi_tuote = rivi["tuote"]
 
-                    maara_ero = uusi_maara - alkuperainen_maara  # Positiivinen = lisäys, negatiivinen = vähennys
+                    # Palauta alkuperäinen määrä alkuperäiselle tuotteelle varastoon
+                    c_varasto.execute("UPDATE varasto SET maara = maara + ? WHERE tuote = ?", (alkuperainen_maara, alkuperainen_tuote))
 
-                    # Päivitä tilaus
+                    # Vähennä uusi määrä uudelta tuotteelta varastosta
+                    c_varasto.execute("UPDATE varasto SET maara = maara - ? WHERE tuote = ?", (uusi_maara, uusi_tuote))
+
+                    # Päivitä tilaus kaikkiin kenttiin
                     c_tilaukset.execute("""
                         UPDATE tilaukset SET
                             nimi = ?, tuote = ?, maara = ?, lisatiedot = ?,
                             toimituspiste = ?, toimituspaiva = ?
                         WHERE id = ?
                     """, (
-                        rivi["nimi"], rivi["tuote"], uusi_maara, rivi["lisatiedot"],
+                        rivi["nimi"], uusi_tuote, uusi_maara, rivi["lisatiedot"],
                         rivi["toimituspiste"], rivi["toimituspaiva"], rivi["id"]
                     ))
 
-                    # Päivitä varasto: vähennetään saldoa maara_eron verran (koska tilaus on varattu)
-                    c_varasto.execute("UPDATE varasto SET maara = maara - ? WHERE tuote = ?", (maara_ero, tuote))
-
             conn_tilaukset.commit()
-            conn_tilaukset.close()
-
             conn_varasto.commit()
+
+            conn_tilaukset.close()
             conn_varasto.close()
 
             st.success("Valitut tilaukset ja varasto päivitetty onnistuneesti.")
